@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="rental">
+	<!-- 글 목록 -->
+	<select id="selectRentalList" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT 
+				    AAA.*
+				FROM(
+				    SELECT 
+				        COUNT(DISTINCT PROD_NUM) OVER() AS TOTAL_COUNT,
+	                    ROW_NUMBER() OVER (ORDER BY PROD_NUM ASC) RNUM,
+	
+				        AA.*
+				    FROM(  
+	
+						SELECT 
+	                		DISTINCT RANK() OVER (PARTITION BY P.PROD_NUM
+	                        ORDER BY P.PROD_NUM ASC) AS RANKING,
+							P.PROD_NUM,
+							P.PROD_NAME,
+							P.PROD_RPRICE,
+							P.PROD_RSTOCK,
+							P.PROD_CATEGORY,
+							P.PROD_HITCOUNT,
+							SUBSTR(P.PROD_THUMB, 0, INSTR(P.PROD_THUMB, ' style')) AS PROD_THUMB
+			            FROM 
+			            	PRODUCT P
+			            FULL OUTER JOIN WISH W
+			                ON P.PROD_NUM = W.PROD_NUM
+						WHERE 
+							P.PROD_DEL = 0 AND
+			                P.PROD_RSTOCK IS NOT NULL
+		    ]]>    
+		        <include refid="sort2"/>
+				<include refid="sort"/>
+                <include refid="common.pagingPost2"/>             
+	            <include refid="search"/>	
+	</select> 
+		
+	<sql id="search">
+		<if test="searchType != null">
+			<if test="searchType == 'all'.toString()">AND (PROD_NAME LIKE '%' ||  #{keyword} || '%' )</if> 
+		</if>
+	</sql> 
+	 
+	<sql id="sort">
+		<if test="sortType != null">
+			<if test="sortType == 'low'.toString()">ORDER BY P.PROD_RPRICE ASC</if>
+			<if test="sortType == 'high'.toString()">ORDER BY P.PROD_RPRICE DESC</if>
+			<if test="sortType == 'wish'.toString()">AND W.MEMBER_ID = #{MEMBER_ID}</if>
+		</if>
+	</sql>
+	
+	<sql id="sort2">
+		<if test="sortType2 != null">
+			<if test="sortType2 == 'tent'.toString()">AND P.PROD_CATEGORY = '텐트/타프'</if>
+			<if test="sortType2 == 'mat'.toString()">AND P.PROD_CATEGORY = '매트/침낭'</if>
+			<if test="sortType2 == 'table'.toString()">AND P.PROD_CATEGORY = '테이블/체어'</if>
+			<if test="sortType2 == 'etc'.toString()">AND P.PROD_CATEGORY = '기타'</if>
+		</if>
+	</sql>
+	
+	<select id="selectRentalList2" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT *
+			FROM(
+				SELECT 
+	                ROW_NUMBER() OVER (ORDER BY PROD_HITCOUNT DESC) RNUM,
+					PROD_NUM,
+					PROD_NAME,
+					PROD_RPRICE,
+					PROD_RSTOCK,
+					PROD_CATEGORY,
+					PROD_HITCOUNT,
+					SUBSTR(PROD_THUMB, 0, INSTR(PROD_THUMB, ' style')) AS PROD_THUMB
+			    FROM 
+			        PRODUCT 
+				WHERE 
+					PROD_DEL = 0 AND
+			        PROD_RSTOCK IS NOT NULL
+			    )
+             WHERE
+                RNUM < 5
+		    ]]>
+	</select> 
+	 
+	
+	<select id="selectRentalDetail" parameterType="hashmap" resultType="hashmap">	
+			SELECT 
+				<if test="MEMBER_ID != null">
+					CASE WHEN EXISTS(
+	                    SELECT * 
+	                    FROM WISH W
+	                    INNER JOIN PRODUCT P  
+	                    ON W.PROD_NUM = P.PROD_NUM
+	                    WHERE W.MEMBER_ID = #{MEMBER_ID, jdbcType=VARCHAR} AND P.PROD_NUM = #{PROD_NUM, jdbcType=VARCHAR}) 
+	                    THEN 'Y' ELSE 'N' END WISH_ACC,
+				</if> 
+				PROD_NUM,
+				PROD_NAME,
+				PROD_CATEGORY,
+				PROD_RPRICE,
+				PROD_RSTOCK,
+				replace(PROD_CONTEXT, 'style=', '') AS PROD_CONTEXT,
+				PROD_HITCOUNT,
+				SUBSTR(PROD_THUMB, 0, INSTR(PROD_THUMB, ' style')) AS PROD_THUMB,
+				PROD_SUB
+            FROM
+            	PRODUCT  
+			WHERE 
+				PROD_DEL = 0 AND
+                PROD_NUM = #{PROD_NUM} 
+		 
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHitCount" parameterType="hashmap">
+		<![CDATA[
+			UPDATE PRODUCT
+			SET
+				PROD_HITCOUNT = NVL(PROD_HITCOUNT, 0) + 1
+			WHERE
+				PROD_NUM = #{PROD_NUM}	
+		]]>
+	</update>
+	
+	<select id="selectWishDetail" parameterType="hashmap" resultType="hashmap"> 
+		<![CDATA[ 
+			SELECT 
+				LISTAGG(PROD_NUM, ',') 
+				WITHIN GROUP(ORDER BY PROD_NUM) AS WISHLIST 
+			FROM 
+				WISH 
+			WHERE 
+				MEMBER_ID = #{MEMBER_ID, jdbcType=VARCHAR}
+		]]>
+	</select>
+	   
+	
+	<insert id="insertWish" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO WISH
+			VALUES(
+			    SEQ_WISH_NUM.NEXTVAL,
+			    #{MEMBER_ID},
+			    #{PROD_NUM}
+			)
+		]]>
+	</insert>
+	 
+	<delete id="deleteWish" parameterType="hashmap">
+		<![CDATA[
+			DELETE FROM 
+				WISH
+			WHERE 
+				PROD_NUM = #{PROD_NUM} AND
+				MEMBER_ID = #{MEMBER_ID} 
+		]]>
+	</delete>
+	
+</mapper>

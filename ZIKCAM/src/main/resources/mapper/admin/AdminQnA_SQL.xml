@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminQnA">
+	<select id="selectQnAList" parameterType="hashmap"
+		resultType="hashmap">
+		<include refid="common.pagingPre"/>
+		<![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY QNA_NUM DESC) AS RNUM,
+				QNA_NUM, 
+				MEMBER_ID, 
+				QNA_TITLE, 
+				QNA_CONTENT, 
+				QNA_REPLY, 
+				QNA_PNUM,
+				TO_CHAR(QNA_DATE, 'YYYY.MM.DD') AS QNA_DATE,
+				QNA_DEL
+			FROM
+				QNA
+			WHERE
+                QNA_PNUM IS NULL
+		]]>
+		<include refid="common.pagingPost"/>
+	</select>
+
+	<select id="selectQnASearchList" parameterType="hashmap"
+		resultType="hashmap">
+		<include refid="common.pagingPre"/>
+		<![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY QNA_NUM DESC) AS RNUM,
+				QNA_NUM, 
+				MEMBER_ID, 
+				QNA_TITLE, 
+				QNA_CONTENT, 
+				QNA_REPLY, 
+				QNA_PNUM,
+				TO_CHAR(QNA_DATE, 'YYYY.MM.DD') AS QNA_DATE,
+				QNA_DEL
+			FROM
+				QNA
+			WHERE
+                QNA_PNUM IS NULL
+		]]>
+			<if test="searchType == 'ALL'"> 
+				AND (QNA_CONTENT LIKE '%' || #{keyword} || '%'
+				OR QNA_TITLE LIKE '%' || #{keyword} || '%')
+			</if> 
+			<if test="searchType == 'ID'"> 
+				AND MEMBER_ID LIKE '%' || #{keyword} || '%' 
+			</if>
+			<if test="searchType == 'CONTENT'"> 
+				AND QNA_CONTENT LIKE '%' || #{keyword} || '%' 
+			</if>
+			<if test="searchType == 'TITLE'"> 
+				AND QNA_TITLE LIKE '%' || #{keyword} || '%' 
+			</if>
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	<select id="selectQnADetail" parameterType="hashmap"
+		resultType="hashmap">
+		<![CDATA[
+			SELECT
+				QNA_NUM, 
+				MEMBER_ID, 
+				QNA_TITLE, 
+				QNA_CONTENT, 
+				QNA_REPLY, 
+				QNA_PNUM,
+				TO_CHAR(QNA_DATE, 'YYYY.MM.DD') AS QNA_DATE,
+				QNA_DEL
+			FROM
+				QNA
+			WHERE
+				QNA_NUM = #{NUM}
+		]]>
+	</select>
+	
+	<select id="selectQnAReplyDetail" parameterType="hashmap"
+		resultType="hashmap">
+		<![CDATA[
+			SELECT
+				QNA_NUM, 
+				MEMBER_ID, 
+				QNA_TITLE, 
+				QNA_CONTENT, 
+				QNA_REPLY, 
+				QNA_PNUM,
+				TO_CHAR(QNA_DATE, 'YYYY.MM.DD') AS QNA_DATE,
+				QNA_DEL
+			FROM
+				QNA
+			WHERE
+				QNA_PNUM = #{NUM}
+		]]>
+	</select>
+	
+	<insert id="insertQnAReply" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO QNA
+			(QNA_NUM, MEMBER_ID, QNA_TITLE, QNA_CONTENT, QNA_PNUM)
+			VALUES
+			(SEQ_QNA_NUM.NEXTVAL, #{ID}, #{TITLE}, #{CONTENT}, #{PNUM,jdbcType=INTEGER})
+		]]>
+	</insert>
+	
+	<update id="updateQnASwitch" parameterType="hashmap">
+		<![CDATA[
+			UPDATE 
+				QNA
+			SET
+				QNA_REPLY = 1
+			WHERE
+				QNA_NUM = #{PNUM}
+		]]>
+	</update>
+	
+	<update id="updateQnAReply" parameterType="hashmap">
+		<![CDATA[
+			UPDATE
+				QNA
+			SET
+				QNA_TITLE = #{TITLE}
+				QNA_CONTENT = #{CONTENT}
+				QNA_DATE = SYSDATE
+			WHERE
+				QNA_NUM = #{NUM}
+		]]>
+	</update>
+	
+	<update id="updateQnADelete" parameterType="hashmap">
+		<![CDATA[
+			UPDATE
+				QNA
+			SET
+				QNA_DEL = 1
+			WHERE
+				QNA_NUM = #{NUM}
+		]]>
+		<if test="SNUM != 0"> 
+			OR QNA_NUM = #{SNUM}	
+		</if>
+		<if test="SNUM == 0"> 
+		</if>
+	</update>
+</mapper>

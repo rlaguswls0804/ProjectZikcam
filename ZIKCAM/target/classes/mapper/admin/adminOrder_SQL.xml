@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminOrder">
+	<select id="selectOrderList" parameterType="hashmap"
+		resultType="hashmap">
+		<include refid="common.pagingPre"/>
+		<![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY ORDER_NUM DESC) AS RNUM,
+				ORDER_NUM, 
+				MEMBER_ID, 
+				ORDER_RCV_NAME, 
+				ORDER_PRICE, 
+				ORDER_RCV_ADDRESS1, 
+				ORDER_RCV_ADDRESS2, 
+				ORDER_PAYTYPE,
+				ORDER_MEMO,
+				TO_CHAR(ORDER_DATE, 'YYYY.MM.DD') AS ORDER_DATE
+			FROM
+				BORDER
+		]]>
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	<select id="selectSearchList" parameterType="hashmap"
+		resultType="hashmap">
+		<include refid="common.pagingPre"/>
+		<![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY ORDER_NUM DESC) AS RNUM,
+				ORDER_NUM, 
+				MEMBER_ID, 
+				ORDER_RCV_NAME, 
+				ORDER_PRICE, 
+				ORDER_RCV_ADDRESS1, 
+				ORDER_RCV_ADDRESS2, 
+				ORDER_PAYTYPE,
+				ORDER_MEMO,
+				TO_CHAR(ORDER_DATE, 'YYYY.MM.DD') AS ORDER_DATE
+			FROM
+				BORDER
+			WHERE
+		]]>
+			<if test="searchType == 'ORDERNUM'"> 
+				ORDER_NUM LIKE '%' || #{keyword} || '%' 
+			</if> 
+			<if test="searchType == 'ID'"> 
+				MEMBER_ID LIKE '%' || #{keyword} || '%' 
+			</if>
+			<if test="searchType == 'RCVNANE'"> 
+				ORDER_RCV_NAME LIKE '%' || #{keyword} || '%' 
+			</if>
+		<include refid="common.pagingPost"/>
+	</select>
+
+	<select id="selectCancelList" parameterType="hashmap"
+		resultType="hashmap">
+		<include refid="common.pagingPre"/>
+		<![CDATA[
+			SELECT 
+				ROW_NUMBER() OVER (ORDER BY B.ORDER_NUM DESC) AS RNUM, 
+				B.ORDER_NUM, 
+				B.MEMBER_ID, 
+				B.ORDER_RCV_PHONE, 
+				B.ORDER_PAYTYPE, 
+				TO_CHAR(B.ORDER_DATE, 'YYYY.MM.DD') AS ORDER_DATE,
+				DD.DORDER_NUM, 
+				DD.PROD_NUM, 
+				DD.PROD_COUNT, 
+				DD.RENTAL_START, 
+				DD.RENTAL_END, 
+				DD.ORDER_SCR, 
+				DD.ORDER_STATUS, 
+				TO_CHAR(DD.APPROVE_DATE, 'YYYY.MM.DD') AS APPROVE_DATE, 
+				DD.ORDER_DEL
+			FROM 
+				(SELECT * 
+				FROM 
+					DORDER D 
+				WHERE 
+					D.ORDER_STATUS = '취소 신청' or 
+					D.ORDER_STATUS = '취소 완료' or 
+					D.ORDER_STATUS = '교환 신청' or 
+					D.ORDER_STATUS = '교환 진행중' or 
+					D.ORDER_STATUS = '교환 완료' or 
+					D.ORDER_STATUS = '반품 신청' or 
+					D.ORDER_STATUS = '반품 진행중' or 
+					D.ORDER_STATUS = '반품 완료'
+				) DD , 
+				BORDER B 
+			WHERE 
+				B.ORDER_NUM = DD.ORDER_NUM
+		]]>
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	<select id="selectSearchCancelList" parameterType="hashmap"
+		resultType="hashmap">
+		<include refid="common.pagingPre"/>
+		<![CDATA[
+			SELECT 
+				ROW_NUMBER() OVER (ORDER BY B.ORDER_NUM DESC) AS RNUM, 
+				B.ORDER_NUM, 
+				B.MEMBER_ID, 
+				B.ORDER_RCV_PHONE, 
+				B.ORDER_PAYTYPE, 
+				TO_CHAR(B.ORDER_DATE, 'YYYY.MM.DD') AS ORDER_DATE,
+				DD.DORDER_NUM, 
+				DD.PROD_NUM, 
+				DD.PROD_COUNT, 
+				DD.RENTAL_START, 
+				DD.RENTAL_END, 
+				DD.ORDER_SCR, 
+				DD.ORDER_STATUS, 
+				TO_CHAR(DD.APPROVE_DATE, 'YYYY.MM.DD') AS APPROVE_DATE, 
+				DD.ORDER_DEL
+			FROM 
+				(SELECT * 
+				FROM 
+					DORDER D 
+				WHERE 
+					D.ORDER_STATUS = '취소 신청' or 
+					D.ORDER_STATUS = '취소 완료' or 
+					D.ORDER_STATUS = '교환 신청' or 
+					D.ORDER_STATUS = '교환 진행중' or 
+					D.ORDER_STATUS = '교환 완료' or 
+					D.ORDER_STATUS = '반품 신청' or 
+					D.ORDER_STATUS = '반품 진행중' or 
+					D.ORDER_STATUS = '반품 완료'
+				) DD , 
+				BORDER B 
+			WHERE 
+				B.ORDER_NUM = DD.ORDER_NUM
+		]]>
+			<if test="searchType == 'ORDERNUM'"> 
+				AND DD.ORDER_NUM LIKE '%' || #{keyword} || '%' 
+			</if> 
+			<if test="searchType == 'ID'"> 
+				AND B.MEMBER_ID LIKE '%' || #{keyword} || '%' 
+			</if>
+			<if test="searchType == 'MEMNUM'"> 
+				AND B.MEMBER_NUM LIKE '%' || #{keyword} || '%' 
+			</if>
+			<if test="sortType == 'ALL' || formSortType == 'ALL'"> 
+				 AND (DD.ORDER_STATUS LIKE '반품' || '%'
+				 OR DD.ORDER_STATUS LIKE '교환' || '%'
+				 OR DD.ORDER_STATUS LIKE '취소' || '%')
+			</if>
+			<if test="sortType == 'REFUND' || formSortType == 'REFUND'"> 
+				 AND DD.ORDER_STATUS LIKE '반품' || '%'
+			</if>
+			<if test="sortType == 'CHANGE' || formSortType == 'CHANGE'"> 
+				 AND DD.ORDER_STATUS LIKE '교환' || '%'
+			</if>
+			<if test="sortType == 'CANCEL' || formSortType == 'CANCEL'"> 
+				 AND DD.ORDER_STATUS LIKE '취소' || '%'
+			</if>
+			
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	<select id="selectOrderDetail" parameterType="hashmap"
+		resultType="hashmap">
+		<![CDATA[
+			SELECT 
+				ORDER_NUM, 
+				MEMBER_ID, 
+				ORDER_RCV_NAME,
+				ORDER_RCV_PHONE, 
+				ORDER_PAYTYPE, 
+				ORDER_RCV_ADDRESS1,
+				ORDER_RCV_ADDRESS2,
+				ORDER_RCV_ZONCODE,
+				ORDER_MEMO,
+				ORDER_DPRICE,
+				ORDER_PRICE
+			FROM 
+				BORDER
+			WHERE 
+				ORDER_NUM = #{NUM}
+		]]>
+	</select>
+	<select id="selectOrderDetailList" parameterType="hashmap"
+		resultType="hashmap">
+		<![CDATA[
+			SELECT DISTINCT 
+                D.ORDER_NUM, 
+				D.DORDER_NUM, 
+				D.PROD_NUM, 
+				D.PROD_COUNT, 
+				D.RENTAL_START, 
+				D.RENTAL_END, 
+				D.ORDER_SCR, 
+				D.ORDER_STATUS, 
+				TO_CHAR(D.APPROVE_DATE, 'YYYY.MM.DD') AS APPROVE_DATE, 
+				D.ORDER_DEL, 
+                PP.PROD_NAME, 
+                PP.PROD_PRICE, 
+                PP.PROD_RPRICE, 
+                RR.PROD_SERIAL_NUM 
+			FROM 
+				DORDER D, 
+                (SELECT 
+                	P.PROD_NUM, 
+                	P.PROD_NAME, 
+                	P.PROD_PRICE, 
+                    P.PROD_RPRICE 
+                FROM 
+                	PRODUCT P) PP, 
+                (SELECT 
+                	R.PROD_NUM, 
+                	R.PROD_SERIAL_NUM 
+                FROM 
+                	RENTAL R) RR 
+			WHERE 
+				D.ORDER_NUM = #{NUM} AND PP.PROD_NUM = D.PROD_NUM AND D.PROD_NUM = RR.PROD_NUM (+) 
+            ORDER BY D.DORDER_NUM ASC, RR.PROD_SERIAL_NUM ASC
+		]]>
+	</select>
+	
+	<update id="updateCS" parameterType="hashmap">
+		<![CDATA[
+			UPDATE
+				DORDER
+			SET
+		]]>
+				<if test="CSNUM == 1">
+					ORDER_STATUS = '반품 진행중',
+					APPROVE_DATE = SYSDATE
+				</if>
+				<if test="CSNUM == 2">
+					ORDER_STATUS = '배송 완료'
+				</if>
+				<if test="CSNUM == 3">
+					ORDER_STATUS = '교환 진행중',
+					APPROVE_DATE = SYSDATE
+				</if>
+				<if test="CSNUM == 4">
+					ORDER_STATUS = '취소 완료',
+					APPROVE_DATE = SYSDATE
+				</if>
+				<if test="CSNUM == 5">
+					ORDER_STATUS = '배송 준비중'
+				</if>
+			WHERE
+				DORDER_NUM = #{DNUM}
+	</update>
+	
+</mapper>

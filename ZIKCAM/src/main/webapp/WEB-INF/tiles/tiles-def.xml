@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+       
+<tiles-definitions>
+	
+	<!-- Main Page(상품,회원) : 사이드바X, 카테고리바O -->
+    <definition name="default" template="/WEB-INF/zikcam/layout/layoutProd.jsp">
+      <put-attribute name="header" value="/WEB-INF/zikcam/layout/headerProd.jsp"/>
+      <put-attribute name="body" value=""/>
+      <put-attribute name="footer" value="/WEB-INF/zikcam/layout/footer.jsp"/>
+    </definition>
+     
+    <definition name="default8" template="/WEB-INF/zikcam/layout/layoutProd.jsp">
+      <put-attribute name="header" value="/WEB-INF/zikcam/layout/headerProd2.jsp"/>
+      <put-attribute name="body" value=""/>
+      <put-attribute name="footer" value="/WEB-INF/zikcam/layout/footer.jsp"/>
+    </definition>
+    
+    <definition name="default9" template="/WEB-INF/zikcam/layout/layoutProd.jsp">
+      <put-attribute name="header" value="/WEB-INF/zikcam/layout/headerProd3.jsp"/>
+      <put-attribute name="body" value=""/>
+      <put-attribute name="footer" value="/WEB-INF/zikcam/layout/footer.jsp"/>
+    </definition>
+    
+    <!-- 마이페이지 -->
+    <definition name="default2" template="/WEB-INF/zikcam/layout/layout.jsp">
+      <put-attribute name="header" value="/WEB-INF/zikcam/layout/header.jsp"/>
+      <put-attribute name="body" value=""/>
+      <put-attribute name="left" value="/WEB-INF/zikcam/layout/left_mypage.jsp"/>
+      <put-attribute name="footer" value="/WEB-INF/zikcam/layout/footer.jsp"/>
+    </definition>
+    
+    <!-- 관리자 -->
+    <definition name="default3" template="/WEB-INF/zikcam/layout/layout.jsp">
+      <put-attribute name="header" value="/WEB-INF/zikcam/layout/header.jsp" />
+      <put-attribute name="body" value=""/>
+      <put-attribute name="left" value="/WEB-INF/zikcam/layout/left_admin.jsp"/>
+      <put-attribute name="footer" value="/WEB-INF/zikcam/layout/footer.jsp"/>
+    </definition>
+
+	<!-- 고객센터 -->
+	<definition name="default4" template="/WEB-INF/zikcam/layout/layout.jsp">
+      <put-attribute name="header" value="/WEB-INF/zikcam/layout/header.jsp"/>
+      <put-attribute name="body" value=""/>
+      <put-attribute name="left" value="/WEB-INF/zikcam/layout/left_cs.jsp"/>
+      <put-attribute name="footer" value="/WEB-INF/zikcam/layout/footer.jsp"/>
+    </definition>
+    
+    <!-- jQuery & script -->
+    <definition name="default5" template="/WEB-INF/zikcam/layout/layout2.jsp">
+      <put-attribute name="insertScript" value=""/>
+      <put-attribute name="header" value="/WEB-INF/zikcam/layout/header.jsp"/>
+      <put-attribute name="body" value=""/>
+      <put-attribute name="left" value="/WEB-INF/zikcam/layout/left_cs.jsp"/>
+      <put-attribute name="footer" value="/WEB-INF/zikcam/layout/footer.jsp"/>
+    </definition>
+    
+    <!-- default -->
+    <definition name="default6" template="/WEB-INF/zikcam/layout/layoutDefault.jsp">
+      <put-attribute name="body" value=""/>
+    </definition>
+    
+    <definition name="default10" template="/WEB-INF/zikcam/layout/layoutDefault2.jsp">
+      <put-attribute name="body" value=""/>
+    </definition>
+    
+    <!-- Member -->
+    <definition name="default7" template="/WEB-INF/zikcam/layout/layoutMember.jsp">
+      <put-attribute name="header" value="/WEB-INF/zikcam/layout/header.jsp"/>
+      <put-attribute name="body" value=""/>
+      <put-attribute name="footer" value="/WEB-INF/zikcam/layout/footer.jsp"/>
+    </definition>
+    
+    <!-- Login -->
+   <!--  <definition name="default8" template="/WEB-INF/zikcam/layout/layoutLogin.jsp">
+      <put-attribute name="header" value="/WEB-INF/zikcam/layout/header.jsp"/>
+      <put-attribute name="body" value=""/>
+      <put-attribute name="footer" value="/WEB-INF/zikcam/layout/footer.jsp"/>
+    </definition> -->
+    
+    
+    <!-- *Member -->
+    <!-- login -->
+    <definition name="/login" extends="default7">
+       <put-attribute name="body" value="/WEB-INF/zikcam/member/login/login.jsp" />
+   	</definition>
+   	
+   	<definition name="/loginForm" extends="default7">
+       <put-attribute name="body" value="/WEB-INF/zikcam/member/login/loginForm.jsp" />
+   	</definition>
+    
+   	<definition name="/findIdResult" extends="default7">
+       <put-attribute name="body" value="/WEB-INF/zikcam/member/login/findIdResult.jsp" />
+   	</definition>
+   	
+   	<definition name="/findAccount" extends="default7"> 
+       <put-attribute name="body" value="/WEB-INF/zikcam/member/login/findAccount.jsp" />
+   	</definition>
+
+   	<definition name="/findPwResult" extends="default7">
+       <put-attribute name="body" value="/WEB-INF/zikcam/member/login/findPwResult.jsp" />
+   	</definition>
+   	
+   	<definition name="/userIdSearchModal" extends="default7">
+       <put-attribute name="body" value="/WEB-INF/zikcam/member/login/userIdSearchModal.jsp" />
+   	</definition>
+    
+    <!-- join -->
+    <definition name="/joinForm" extends="default10">
+       <put-attribute name="body" value="/WEB-INF/zikcam/member/join/joinForm.jsp" />
+   	</definition>
+    
+     <definition name="/agreement" extends="default7">
+       <put-attribute name="body" value="/WEB-INF/zikcam/member/join/agreement.jsp" />
+   	</definition>
+   	
+   	 <definition name="/idCheck" extends="default7">
+       <put-attribute name="body" value="/WEB-INF/zikcam/member/join/idCheck.jsp" />
+   	</definition>
+   	
+   	<definition name="/joinConfirm" extends="default7">
+       <put-attribute name="body" value="/WEB-INF/zikcam/member/join/joinConfirm.jsp" />
+   	</definition>
+    
+    <!-- *myPage -->
+    <!-- myPage_main -->
+    <definition name="/myPageList" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/myPageList.jsp" />
+   	</definition>
+    
+    <!-- Account(회원정보) -->
+    <definition name="/myAccount" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/Account/myAccount.jsp" />
+   	</definition>
+   	
+   	<definition name="/myAccountModify" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/Account/myAccountModify.jsp" />
+   	</definition>
+   	
+   	<definition name="/myAccountPwCheck" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/Account/myAccountPwCheck.jsp" />
+   	</definition>
+   	
+   	<!-- myPQ(내 상품 문의) -->
+   	<definition name="/myPQList" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/myPQ/myPQList.jsp" />
+   	</definition>
+   	
+   	<definition name="/myPQDetail" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/myPQ/myPQDetail.jsp" />
+   	</definition>
+   	
+   	<definition name="/myPQModifyForm" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/myPQ/myPQModifyForm.jsp" />
+   	</definition>
+   	
+   	<!-- myReview(내 구매후기) -->
+   	<definition name="/myReviewList" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/myReview/myReviewList.jsp" />
+   	</definition>
+ 
+   	<definition name="/myReviewDetail" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/myReview/myReviewDetail.jsp" />
+   	</definition>
+   	
+   	<definition name="/myReviewModifyForm" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/myReview/myReviewModifyForm.jsp" />
+   	</definition>
+   	
+   	<!-- myCart(장바구니) -->
+   	<definition name="/myCartList" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/myCart/myCartList.jsp" />
+   	</definition>
+   	
+   	
+   	<!-- myOrder(주문내역) -->
+   	<definition name="/myOrderList" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/myOrder/myOrderList.jsp" />
+   	</definition>
+   	
+   	<definition name="/myOrderDetail" extends="default2">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/myOrder/myOrderDetail.jsp" />
+   	</definition>
+   	
+   	<definition name="/myOrderRefundForm" extends="default6">
+       <put-attribute name="body" value="/WEB-INF/zikcam/myPage/myOrder/myOrderRefundForm.jsp" />
+   	</definition>
+   	
+   	
+    <!-- *admin -->
+    <!-- 에러페이지 08/21 추가 -->
+    <definition name="/errorPage" extends="default6">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/errorPage.jsp" />
+   	</definition>
+    
+    <!-- userInfo(회원관리) -->
+    <definition name="/userList" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/userInfo/userList.jsp" />
+   	</definition>
+   	
+   	<definition name="/userDetail" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/userInfo/userDetail.jsp" />
+   	</definition>
+    
+    <!-- product(상품관리) -->
+    <definition name="/productList" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/product/productList.jsp" />
+   	</definition>
+   	
+   	<definition name="/productModify" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/product/productModify.jsp" />
+   	</definition>
+   	
+   	<definition name="/productWrite" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/product/productWrite.jsp" />
+   	</definition>
+   	
+    <!-- order(주문관리) -->
+    <definition name="/orderList" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/order/orderList.jsp" />
+   	</definition>
+   	
+   	<definition name="/orderDetail" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/order/orderDetail.jsp" />
+   	</definition>
+   	
+   	<definition name="/orderCancelList" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/order/orderCancelList.jsp" />
+   	</definition>
+    
+    <!-- review(구매후기관리) -->
+    <definition name="/reviewList" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/review/reviewList.jsp" />
+   	</definition>
+   	
+   	<definition name="/reviewDetail" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/review/reviewDetail.jsp" />
+   	</definition>
+    
+    <!-- PQ 08/21 추가 -->
+    <definition name="/PQList" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/PQ/PQList.jsp" />
+   	</definition>
+   	
+   	<definition name="/PQDetail" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/PQ/PQDetail.jsp" />
+   	</definition>
+   	
+   	<definition name="/PQModifyForm" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/PQ/PQModifyForm.jsp" />
+   	</definition>
+   	
+   	<!-- QnA 08/20 추가 -->
+    <definition name="/QnAList" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/QnA/QnAList.jsp" />
+   	</definition>
+   	
+   	<definition name="/QnADetail" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/QnA/QnADetail.jsp" />
+   	</definition>
+   	
+   	<definition name="/QnAModifyForm" extends="default3">
+       <put-attribute name="body" value="/WEB-INF/zikcam/admin/QnA/QnAModifyForm.jsp" />
+   	</definition>
+    
+    <!-- *product -->
+    <!-- order(주문/결제) -->
+    <definition name="/order" extends="default2">
+      <put-attribute name="body" value="/WEB-INF/zikcam/product/order/order.jsp" />
+    </definition>
+    
+    <definition name="/order2" extends="default2">
+      <put-attribute name="body" value="/WEB-INF/zikcam/product/order/order2.jsp" />
+    </definition>
+    
+    <definition name="/orderPay" extends="default2">
+      <put-attribute name="body" value="/WEB-INF/zikcam/product/order/orderPay.jsp" />
+    </definition>
+    
+    <definition name="/orderPay2" extends="default2">
+      <put-attribute name="body" value="/WEB-INF/zikcam/product/order/orderPay2.jsp" />
+    </definition>
+    
+    <definition name="/orderPaySuccess" extends="default2">
+      <put-attribute name="body" value="/WEB-INF/zikcam/product/order/orderPaySuccess.jsp" />
+    </definition>
+    
+    <definition name="/orderPayFail" extends="default2">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/order/orderPayFail.jsp" />
+    </definition>
+    
+    <definition name="/orderPayFail2" extends="default2">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/order/orderPayFail2.jsp" />
+    </definition>
+    
+    <!-- product -->
+    <definition name="/order" extends="default2">
+      <put-attribute name="body" value="/WEB-INF/zikcam/product/order/order.jsp" />
+    </definition>
+    
+    <definition name="/order2" extends="default2">
+      <put-attribute name="body" value="/WEB-INF/zikcam/product/order/order2.jsp" />
+    </definition>
+    
+    <definition name="/orderPay" extends="default2">
+      <put-attribute name="body" value="/WEB-INF/zikcam/product/order/orderPay.jsp" />
+    </definition>
+    
+    <definition name="/orderPaySuccess" extends="default2">
+      <put-attribute name="body" value="/WEB-INF/zikcam/product/order/orderPaySuccess.jsp" />
+    </definition>
+    
+    <definition name="/orderPayFail" extends="default2">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/order/orderPayFail.jsp" />
+    </definition>
+    
+    <!-- product -->
+    <definition name="/main" extends="default">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/product/main.jsp" />
+    </definition>
+    
+    <definition name="/purchaseTent" extends="default">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/product/purchaseProduct.jsp" />
+    </definition>
+    
+    <definition name="/purchaseMatt" extends="default">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/product/purchaseProduct.jsp" />
+    </definition>
+    
+    <definition name="/purchaseTable" extends="default">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/product/purchaseProduct.jsp" />
+    </definition>
+    
+    <definition name="/purchaseEtc" extends="default">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/product/purchaseProduct.jsp" />
+    </definition>
+    
+    <definition name="/productDetail" extends="default8">
+       <put-attribute name="body" value="/WEB-INF/zikcam/product/product/productDetail.jsp" />
+   	</definition> 
+   	
+   	<definition name="/productDetail2" extends="default8">
+       <put-attribute name="body" value="/WEB-INF/zikcam/product/product/productDetail2.jsp" />
+   	</definition> 
+   	
+   	<definition name="/writeProdQR" extends="default">
+       <put-attribute name="body" value="/WEB-INF/zikcam/product/product/writeProdQR.jsp" />
+   	</definition>
+    
+    <!-- rental -->
+    <definition name="/rentalDate" extends="default">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/rental/rentalDate.jsp" />
+    </definition>
+    
+    <definition name="/rentalDate2" extends="default">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/rental/rentalDate2.jsp" />
+    </definition>
+    
+    <definition name="/rentalList" extends="default">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/rental/rentalList.jsp" />
+    </definition>
+	
+	<definition name="/rentalDetail" extends="default9">
+       <put-attribute name="body" value="/WEB-INF/zikcam/product/rental/rentalDetail.jsp" />
+   	</definition>
+   	
+   	<definition name="/rentalDetail2" extends="default9">
+       <put-attribute name="body" value="/WEB-INF/zikcam/product/rental/rentalDetail2.jsp" />
+   	</definition>
+    
+    <definition name="/rentalMatt" extends="default">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/rental/rentalMatt.jsp" />
+    </definition>
+    
+    <definition name="/rentalTable" extends="default">
+     <put-attribute name="body" value="/WEB-INF/zikcam/product/rental/rentalTable.jsp" />
+    </definition>
+    
+    
+    <!-- *cs -->
+    <!-- intro -->
+    <definition name="/introList" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/intro/introList.jsp" />
+    </definition>
+    
+    <definition name="/csIndex" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/intro/csIndex.jsp" />
+    </definition>
+     
+    <!-- qna -->
+	<definition name="/qnaList" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/qna/qnaList.jsp" />
+    </definition>
+   
+    <definition name="/qnaDetail" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/qna/qnaDetail.jsp" />
+    </definition>
+   
+    <definition name="/qnaWrite" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/qna/qnaWrite.jsp" />
+    </definition>
+    
+    <definition name="/qnaReplyWrite" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/qna/qnaReplyWrite.jsp" />
+    </definition>
+   
+    <definition name="/qnaModify" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/qna/qnaModify.jsp" />
+    </definition>
+    
+    <definition name="/qnaReplyModify" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/qna/qnaReplyModify.jsp" />
+    </definition>
+   
+    <definition name="/qnaDelete" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/qna/qnaDelete.jsp" />
+    </definition>	
+	
+	<!-- faq -->
+	<definition name="/faqList" extends="default5">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/faq/faqList.jsp" />
+      <put-attribute name="insertScript" value="/WEB-INF/zikcam/layout/insertScript.jsp" />
+    </definition>
+    
+    <definition name="/faqList2" extends="default5">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/faq/faqList2.jsp" />
+      <put-attribute name="insertScript" value="/WEB-INF/zikcam/layout/insertScript.jsp" />
+    </definition>
+    
+    <definition name="/faqModify" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/faq/faqModify.jsp" />
+    </definition>
+    
+    <definition name="/faqWrite" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/faq/faqWrite.jsp" />
+    </definition>
+ 
+	<!-- notice -->
+ 	<definition name="/noticeList" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/notice/noticeList.jsp" />
+    </definition>
+    
+    <definition name="/noticeDetail" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/notice/noticeDetail.jsp" />
+    </definition>
+    
+    <definition name="/noticeWrite" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/notice/noticeWrite.jsp" />
+    </definition>
+    
+    <definition name="/noticeModify" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/notice/noticeModify.jsp" />
+    </definition>
+    
+    <definition name="/noticeDelete" extends="default4">
+      <put-attribute name="body" value="/WEB-INF/zikcam/cs/notice/noticeDelete.jsp" />
+    </definition>
+    
+    
+    
+</tiles-definitions>
+

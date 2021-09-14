@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="order"> 
+<select id="selectPurchaseList" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select c.cart_num,
+			(select p.prod_thumb from product p 
+	        	where p.prod_num = c.prod_num) prod_thumb, 
+	        (select p.prod_name from product p 
+	        	where p.prod_num = c.prod_num) prod_name, 
+			(select p.prod_price from product p 
+				where p.prod_num = c.prod_num) prod_price, 
+			(select nvl(p.prod_stock,0) from product p
+				where p.prod_num = c.prod_num) prod_stock, c.prod_count, c.cart_del
+		from cart c where c.member_id = #{MEMBER_ID} and c.cart_rental = 0
+	]]>   
+</select>
+
+<select id="selectRentalList" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select c.cart_num, 
+		(select p.prod_thumb from product p 
+	        	where p.prod_num = c.prod_num) prod_thumb,
+	    (select p.prod_name from product p where p.prod_num = c.prod_num) prod_name,
+		(select p.prod_rprice from product p where p.prod_num = c.prod_num) prod_rprice, 
+		(select p.prod_rstock from product p where p.prod_num = c.prod_num) real_stock,
+		(select count(DISTINCT prod_serial_num)
+                                    from rental
+                                    where prod_num = c.prod_num and rental_day between #{RENTAL_START, jdbcType=VARCHAR} and #{RENTAL_END, jdbcType=VARCHAR}
+                                    group by prod_num) day_stock,
+c.prod_count, c.cart_del
+from cart c
+where c.member_id = #{MEMBER_ID} and c.cart_rental = 1
+	]]>   
+</select>
+
+<select id="selectPurchase" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select prod_name, prod_price, prod_stock, prod_thumb from product where prod_num = #{PROD_NUM}
+	]]>
+</select>
+ 
+ 
+<select id="selectRental" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select prod_name, prod_rprice, prod_rstock,
+		(select count(DISTINCT prod_serial_num)
+                                    from rental
+                                    where prod_num = #{PROD_NUM} and rental_day between #{RENTAL_START, jdbcType=VARCHAR} and #{RENTAL_END, jdbcType=VARCHAR}
+                                    group by prod_num) day_stock
+from product where prod_num = #{PROD_NUM}
+	]]>
+</select>
+
+
+<delete id="deleteCartProduct" parameterType="hashmap">
+	<![CDATA[
+		delete from cart where cart_num = #{CART_NUM}
+	]]>
+</delete>
+
+<update id="updateProdCount" parameterType="hashmap">
+	<![CDATA[
+		update cart set prod_count = #{PROD_COUNT} where cart_num = #{CART_NUM}
+	]]>
+</update>
+
+<update id="updateCartDel" parameterType="hashmap">
+	<![CDATA[
+		update cart set cart_del = #{CART_DEL} where cart_num = #{CART_NUM}
+	]]>
+</update>
+
+<select id="selectMemberInform" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select * from member where member_id = #{MEMBER_ID}
+	]]>
+</select>
+
+<insert id="insertBorder" parameterType="hashmap">
+	<![CDATA[
+		INSERT INTO BORDER VALUES(SEQ_ORDER_NUM.NEXTVAL,#{MEMBER_ID},#{ORDER_RCV_NAME},#{ORDER_RCV_PHONE },
+		#{ORDER_RCV_ADDRESS1 },#{ORDER_RCV_ADDRESS2 },#{ORDER_RCV_ZONCODE },#{ORDER_MEMO, jdbcType=VARCHAR},
+		#{ORDER_DPRICE },#{ORDER_PRICE },#{ORDER_PAYTYPE },default)
+	]]>
+</insert> 
+
+<select id="selectLastOrderNum" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		SELECT (order_num + 1) as order_num  
+		FROM(SELECT order_num FROM border ORDER BY ROWNUM DESC)
+		WHERE ROWNUM = 1
+	]]>
+</select> 
+
+<select id="selectLastOrderNumOne" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		SELECT order_num 
+		FROM(SELECT order_num FROM border ORDER BY ROWNUM DESC)
+		WHERE ROWNUM = 1
+	]]>
+</select>
+
+
+<insert id="insertDorder" parameterType="hashmap">
+	<![CDATA[
+		INSERT INTO DORDER VALUES(SEQ_DORDER_NUM.NEXTVAL,#{ORDER_NUM},#{PROD_NUM},#{PROD_COUNT},
+		#{RENTAL_START},#{RENTAL_END},#{ORDER_STATUS},null,null, default)
+	]]>
+</insert>
+
+<insert id="insertDorderWithNull" parameterType="hashmap">
+	<![CDATA[
+		INSERT INTO DORDER VALUES(SEQ_DORDER_NUM.NEXTVAL,#{ORDER_NUM},#{PROD_NUM},#{PROD_COUNT},
+		null,null,#{ORDER_STATUS},null,null, default)
+	]]>
+</insert>
+
+<select id="selectCartWithoutDel" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select * from cart where member_id=#{MEMBER_ID} and cart_del=0
+	]]>
+</select>
+
+<select id="selectOrderPurchase" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select * from product where prod_num = #{PROD_NUM}
+	]]>
+</select>
+
+<update id="updateProdStock" parameterType="hashmap">
+	<![CDATA[
+		update product set prod_stock = prod_stock - #{PROD_COUNT} where prod_num = #{PROD_NUM}
+	]]>
+</update>
+
+<update id="updateRProdStock" parameterType="hashmap">
+	<![CDATA[
+		update product set prod_rstock = prod_rstock - #{PROD_COUNT} where prod_num = #{PROD_NUM}
+	]]>
+</update> 
+
+<select id="selectLastBorder" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		SELECT * FROM(SELECT * FROM border ORDER BY ROWNUM DESC) WHERE ROWNUM = 1
+	]]>
+</select>
+
+<select id="selectLastDorderPurchase" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select d.prod_num, d.prod_count, 
+			(select p.prod_name from product p where p.prod_num = d.prod_num) prod_name,
+			(select p.prod_price from product p where p.prod_num = d.prod_num) prod_price,
+			(select p.prod_thumb from product p where p.prod_num = d.prod_num) prod_thumb
+		from dorder d
+		where d.order_num = (SELECT order_num
+				FROM(SELECT order_num FROM border ORDER BY ROWNUM DESC)
+				WHERE ROWNUM = 1) and d.rental_start is null
+	]]>
+</select>  
+
+<select id="selectLastDorderRental" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select d.prod_num, d.prod_count, 
+			(select p.prod_name from product p where p.prod_num = d.prod_num) prod_name,
+			(select p.prod_rprice from product p where p.prod_num = d.prod_num) prod_rprice,
+			(select p.prod_thumb from product p where p.prod_num = d.prod_num) prod_thumb
+		from dorder d
+		where d.order_num = (SELECT order_num
+				FROM(SELECT order_num FROM border ORDER BY ROWNUM DESC)
+				WHERE ROWNUM = 1) and d.rental_start is not null
+	]]>
+</select>
+
+<select id="sumPurchase" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		SELECT sum(c.prod_count * (select prod_price from product where prod_num = c.prod_num)) as price
+FROM CART c
+WHERE c.member_id = #{MEMBER_ID} and c.cart_rental = 0 and c.cart_del = 0
+group by c.member_id
+	]]>
+</select>
+
+<select id="sumRental" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		SELECT sum(c.prod_count * (select prod_rprice from product where prod_num = c.prod_num)) as rprice
+FROM CART c
+WHERE c.member_id = #{MEMBER_ID} and c.cart_rental = 1 and c.cart_del = 0
+group by c.member_id
+	]]>
+</select>
+
+<insert id="insertRental" parameterType="hashmap">
+	<![CDATA[
+		DECLARE
+		RENTALDAY DATE := #{RENTAL_START};
+		BEGIN
+    		LOOP
+    		INSERT INTO RENTAL VALUES (SEQ_RENTAL_NUM.NEXTVAL, #{PROD_NUM}, #{PROD_SERIAL_NUM}, RENTALDAY);
+    		RENTALDAY := RENTALDAY+1;
+    		EXIT WHEN RENTALDAY > #{RENTAL_END};
+    		END LOOP;
+		END; 
+	]]> 
+</insert>
+
+<select id="findSerialNum" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select DISTINCT prod_serial_num
+        from rental
+        where prod_num = #{PROD_NUM} and rental_day between #{RENTAL_START} and #{RENTAL_END}
+	]]>
+</select>
+
+</mapper>

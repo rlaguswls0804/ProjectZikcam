@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminPQ">
+	<select id="selectPQList" parameterType="hashmap"
+		resultType="hashmap">
+		<include refid="common.pagingPre"/>
+		<![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY PQ_NUM DESC) AS RNUM,
+				Q.PQ_NUM, 
+				Q.MEMBER_ID, 
+				Q.PROD_NUM, 
+				Q.PQ_TITLE, 
+				Q.PQ_CONTENT, 
+				Q.PQ_REPLY, 
+				Q.PQ_PNUM,
+				TO_CHAR(Q.PQ_DATE, 'YYYY.MM.DD') AS PQ_DATE,
+				Q.PQ_DEL,
+				P.PROD_NAME
+			FROM
+				PRODUCTQUESTION Q, PRODUCT P
+			WHERE
+                PQ_PNUM IS NULL AND P.PROD_NUM = Q.PROD_NUM
+		]]>
+		<include refid="common.pagingPost"/>
+	</select>
+
+	<select id="selectPQSearchList" parameterType="hashmap"
+		resultType="hashmap">
+		<include refid="common.pagingPre"/>
+		<![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY PQ_NUM DESC) AS RNUM,
+				Q.PQ_NUM, 
+				Q.MEMBER_ID, 
+				Q.PROD_NUM, 
+				Q.PQ_TITLE, 
+				Q.PQ_CONTENT, 
+				Q.PQ_REPLY, 
+				Q.PQ_PNUM,
+				TO_CHAR(Q.PQ_DATE, 'YYYY.MM.DD') AS PQ_DATE,
+				Q.PQ_DEL,
+				P.PROD_NAME
+			FROM
+				PRODUCTQUESTION Q, PRODUCT P
+			WHERE
+                PQ_PNUM IS NULL AND P.PROD_NUM = Q.PROD_NUM
+		]]>
+			<if test="searchType == 'ALL'"> 
+				AND (Q.PQ_CONTENT LIKE '%' || #{keyword} || '%'
+				OR Q.PQ_TITLE LIKE '%' || #{keyword} || '%')
+			</if> 
+			<if test="searchType == 'ID'"> 
+				AND Q.MEMBER_ID LIKE '%' || #{keyword} || '%' 
+			</if>
+			<if test="searchType == 'CONTENT'"> 
+				AND Q.PQ_CONTENT LIKE '%' || #{keyword} || '%' 
+			</if>
+			<if test="searchType == 'TITLE'"> 
+				AND Q.PQ_TITLE LIKE '%' || #{keyword} || '%' 
+			</if>
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	<select id="selectPQDetail" parameterType="hashmap"
+		resultType="hashmap">
+		<![CDATA[
+			SELECT
+				PQ_NUM, 
+				MEMBER_ID, 
+				PROD_NUM, 
+				PQ_TITLE, 
+				PQ_CONTENT, 
+				PQ_REPLY, 
+				PQ_PNUM,
+				TO_CHAR(PQ_DATE, 'YYYY.MM.DD') AS PQ_DATE,
+				PQ_DEL
+			FROM
+				PRODUCTQUESTION
+			WHERE
+				PQ_NUM = #{NUM}
+		]]>
+	</select>
+	
+	<select id="selectPQReplyDetail" parameterType="hashmap"
+		resultType="hashmap">
+		<![CDATA[
+			SELECT
+				PQ_NUM, 
+				MEMBER_ID, 
+				PROD_NUM, 
+				PQ_TITLE, 
+				PQ_CONTENT, 
+				PQ_REPLY, 
+				PQ_PNUM,
+				TO_CHAR(PQ_DATE, 'YYYY.MM.DD') AS PQ_DATE,
+				PQ_DEL
+			FROM
+				PRODUCTQUESTION
+			WHERE
+				PQ_PNUM = #{NUM}
+		]]>
+	</select>
+	
+	<insert id="insertPQReply" parameterType="hashmap">
+	
+		<![CDATA[
+			INSERT INTO PRODUCTQUESTION
+			(PQ_NUM, MEMBER_ID, PROD_NUM, PQ_TITLE, PQ_CONTENT, PQ_PNUM)
+			VALUES
+			(SEQ_PQ_NUM.NEXTVAL, #{ID}, #{NUM}, #{TITLE}, #{CONTENT}, #{PNUM,jdbcType=INTEGER})
+		]]>
+	</insert>
+	
+	<update id="updatePQSwitch" parameterType="hashmap">
+		<![CDATA[
+			UPDATE 
+				PRODUCTQUESTION
+			SET
+				PQ_REPLY = 1
+			WHERE
+				PQ_NUM = #{PNUM}
+		]]>
+	</update>
+	
+	<update id="updatePQReply" parameterType="hashmap">
+		<![CDATA[
+			UPDATE
+				PRODUCTQUESTION
+			SET
+				PQ_TITLE = #{TITLE}
+				PQ_CONTENT = #{CONTENT}
+				PQ_DATE = SYSDATE
+			WHERE
+				PQ_NUM = #{NUM}
+		]]>
+	</update>
+	
+	<update id="updatePQDelete" parameterType="hashmap">
+		<![CDATA[
+			UPDATE
+				PRODUCTQUESTION
+			SET
+				PQ_DEL = 1
+			WHERE
+				PQ_NUM = #{NUM}
+		]]>
+		<if test="SNUM != 0"> 
+			OR PQ_NUM = #{SNUM}	
+		</if>
+		<if test="SNUM == 0"> 
+		</if>
+	</update>
+	
+	<insert id="insertFile" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO FILES
+				(
+					FILE_NUM,
+					FILE_ORG,
+					FILE_STD,
+					FILE_SIZE,
+					FILE_TABLE
+				)
+			VALUES
+				(
+					SEQ_FILE_NUM.NEXTVAL,
+					#{ORG},
+					#{STD},
+					#{SIZE},
+					'PQ'
+				)	
+		]]>
+	</insert>
+</mapper>

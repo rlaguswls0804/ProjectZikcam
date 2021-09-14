@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mypage">
+
+
+	<!-- Main Page -->
+
+	<select id="selectMainOrderList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT AA.*, ROWNUM  
+	    FROM(SELECT 
+	        DISTINCT RANK() OVER (PARTITION BY B.ORDER_NUM
+	                        ORDER BY D.DORDER_NUM DESC) AS RANKING, 
+	        D.ORDER_NUM,
+	        CNT,
+	        P.PROD_NAME,
+	        TO_CHAR(B.ORDER_DATE, 'YYYY.MM.DD') AS ORDER_DATE,
+	        B.ORDER_PRICE
+	    FROM (SELECT ORDER_NUM, COUNT(ORDER_NUM) AS CNT FROM DORDER
+	    GROUP BY ORDER_NUM) C
+	    FULL OUTER JOIN BORDER B
+	        ON C.ORDER_NUM = B.ORDER_NUM
+	    FULL OUTER JOIN DORDER D
+	        ON B.ORDER_NUM = D.ORDER_NUM
+	    FULL OUTER JOIN PRODUCT P
+	        ON D.PROD_NUM = P.PROD_NUM
+	    WHERE B.MEMBER_ID = #{MEMBER_ID}
+	    AND ORDER_NUM IS NOT NULL
+        ORDER BY ORDER_NUM DESC   
+	    )AA
+	     WHERE
+	        RANKING <= 1 AND ROWNUM <= 3 
+		]]>
+	</select>
+
+
+	<select id="selectMainReviewList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT 
+		R.REVIEW_NUM, P.PROD_NAME, R.MEMBER_ID, R.REVIEW_TITLE, 
+        R.REVIEW_CONTENT, R.REVIEW_HITCOUNT, TO_CHAR(R.REVIEW_DATE, 'YYYY.MM.DD') AS REVIEW_DATE, R.REVIEW_LIKE, ROWNUM
+		FROM REVIEW R
+        FULL OUTER JOIN PRODUCT P
+            ON R.PROD_NUM = P.PROD_NUM
+		WHERE REVIEW_DEL = 0 AND MEMBER_ID = #{MEMBER_ID} AND ROWNUM <= 3
+		ORDER BY 
+		REVIEW_NUM DESC
+		]]>
+	</select>
+
+	<select id="selectMainPQList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT Q.PQ_NUM, Q.MEMBER_ID, P.PROD_NAME, Q.PQ_TITLE, Q.PQ_CONTENT, Q.PQ_REPLY, Q.PQ_PNUM, TO_CHAR(Q.PQ_DATE, 'YYYY.MM.DD') AS PQ_DATE, Q.PQ_DEL, ROWNUM
+		FROM PRODUCTQUESTION Q
+		FULL OUTER JOIN PRODUCT P
+		            ON Q.PROD_NUM = P.PROD_NUM
+		WHERE
+		PQ_DEL = 0 AND MEMBER_ID = #{MEMBER_ID} AND PQ_PNUM IS NULL AND ROWNUM <= 3
+		]]>
+	</select>
+
+	<select id="selectMainCartList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT C.CART_NUM, C.MEMBER_ID, P.PROD_NAME, P.PROD_PRICE, P.PROD_CONTEXT, C.PROD_COUNT, C.CART_RENTAL, ROWNUM
+	    FROM CART C
+	    FULL OUTER JOIN PRODUCT P
+	        ON C.PROD_NUM = P.PROD_NUM
+	    WHERE 
+	    MEMBER_ID = #{MEMBER_ID} AND ROWNUM <= 3
+		]]>
+	</select>
+
+	<!-- review -->
+	
+	<select id="selectReviewList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<include refid="common.pagingPre"/>
+		<![CDATA[ 
+		SELECT 
+		R.REVIEW_NUM,  ROW_NUMBER() OVER (ORDER BY REVIEW_NUM DESC) RNUM, P.PROD_NAME,  R.REVIEW_TITLE, P.PROD_CATEGORY,
+		TO_CHAR(R.REVIEW_DATE, 'YYYY.MM.DD') AS REVIEW_DATE, R.REVIEW_LIKE 
+		FROM REVIEW R
+        FULL OUTER JOIN PRODUCT P
+            ON R.PROD_NUM = P.PROD_NUM
+		WHERE REVIEW_DEL = 0
+		ORDER BY
+		REVIEW_NUM DESC
+		]]>
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	
+	<select id="selectMyReviewList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<include refid="common.pagingPre"/>
+		<![CDATA[ 
+		SELECT 
+		R.REVIEW_NUM,  ROW_NUMBER() OVER (ORDER BY REVIEW_NUM DESC) RNUM, P.PROD_NAME,  R.REVIEW_TITLE, P.PROD_CATEGORY,
+		TO_CHAR(R.REVIEW_DATE, 'YYYY.MM.DD') AS REVIEW_DATE, R.REVIEW_LIKE 
+		FROM REVIEW R
+        FULL OUTER JOIN PRODUCT P
+            ON R.PROD_NUM = P.PROD_NUM
+		WHERE REVIEW_DEL = 0 AND MEMBER_ID = #{MEMBER_ID}
+		]]>
+		<include refid="reviewSearch"/>
+		<include refid="reviewSort"/>
+		<include refid="reviewOrderby"/>
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	<sql id="reviewSearch">
+		<if test="searchType != null">
+			<if test="searchType == 'product'.toString()">AND (PROD_NAME LIKE '%${keyword}%')</if>
+			<if test="searchType == 'title'.toString()">AND (REVIEW_TITLE LIKE '%${keyword}%')</if>
+			<if test="searchType == 'content'.toString()">AND (REVIEW_CONTENT LIKE '%' || #{keyword} || '%')</if>
+		</if>
+	</sql>
+	
+	<sql id="reviewSort">
+		<if test="sortType != null">
+			<if test="sortType == 'tent'.toString()">AND PROD_CATEGORY like '%텐트%' </if>
+			<if test="sortType == 'sleepbag'.toString()">AND PROD_CATEGORY like '%침낭%'</if>
+			<if test="sortType == 'table'.toString()">AND PROD_CATEGORY like '%테이블%'</if>
+			<if test="sortType == 'else'.toString()">AND PROD_CATEGORY = '기타'</if>
+		</if>
+		<if test="formSortType != null">
+			<if test="formSortType == 'tent'.toString()">AND PROD_CATEGORY like '%텐트%' </if>
+			<if test="formSortType == 'sleepbag'.toString()">AND PROD_CATEGORY like '%침낭%'</if>
+			<if test="formSortType == 'table'.toString()">AND PROD_CATEGORY like '%테이블%'</if>
+			<if test="formSortType == 'else'.toString()">AND PROD_CATEGORY = '기타'</if>
+		</if>
+	</sql>
+	
+	<sql id="reviewOrderby">
+		ORDER BY 
+		REVIEW_NUM DESC
+	</sql>
+
+	<select id="selectReviewDetail" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT 
+		R.REVIEW_NUM, P.PROD_NAME, R.MEMBER_ID, R.REVIEW_TITLE, 
+        R.REVIEW_CONTENT, R.REVIEW_HITCOUNT, TO_CHAR(R.REVIEW_DATE, 'YYYY.MM.DD') AS REVIEW_DATE, R.REVIEW_LIKE
+		FROM REVIEW R
+        FULL OUTER JOIN PRODUCT P
+            ON R.PROD_NUM = P.PROD_NUM
+		WHERE REVIEW_DEL = 0 AND REVIEW_NUM = ${REVIEW_NUM}
+		]]>
+	</select>
+	<update id="updateReviewHitCnt" parameterType="hashmap"> 
+	<![CDATA[ 
+		UPDATE REVIEW 
+		SET REVIEW_HITCOUNT = NVL(REVIEW_HITCOUNT, 0) + 1 
+		WHERE REVIEW_NUM = ${REVIEW_NUM} 
+	]]>
+	</update>
+
+	<update id="updateReview" parameterType="hashmap"> 
+	<![CDATA[ 
+		UPDATE REVIEW 
+		SET REVIEW_TITLE = #{REVIEW_TITLE}, REVIEW_CONTENT = #{REVIEW_CONTENT}, REVIEW_LIKE = ${REVIEW_LIKE}
+		WHERE REVIEW_NUM = ${REVIEW_NUM} 
+	]]>	
+	</update>
+	
+	<update id="deleteReview" parameterType="hashmap"> 
+	<![CDATA[ 
+		UPDATE REVIEW 
+		SET REVIEW_DEL= 1 
+		WHERE REVIEW_NUM = ${REVIEW_NUM} 
+	]]>	
+	</update>
+
+
+
+	<!-- ProductQuestion -->
+	
+	<select id="selectPQList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<include refid="common.pagingPre"/>
+		<![CDATA[ 
+		SELECT  
+		ROW_NUMBER() OVER (ORDER BY PQ_NUM DESC) RNUM, 
+		'PQ' AS LISTTYPE,
+		Q.PQ_NUM AS NUM, 
+		Q.MEMBER_ID,
+		Q.PQ_CONTENT AS CONTENT,
+		P.PROD_NAME, 
+		Q.PQ_TITLE AS TITLE, 
+		Q.PQ_REPLY AS REPLY, 
+		TO_CHAR(Q.PQ_DATE, 'YYYY.MM.DD') AS CDATE, 
+		Q.PQ_DEL, 
+		Q.PQ_PNUM AS PNUM
+		FROM PRODUCTQUESTION Q
+		FULL OUTER JOIN PRODUCT P
+		            ON Q.PROD_NUM = P.PROD_NUM
+		WHERE
+		PQ_DEL = 0 AND PQ_PNUM IS NULL
+		]]>
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	
+	<select id="selectMyPQList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<include refid="common.pagingPre"/>
+		<![CDATA[ 
+		SELECT  
+		ROW_NUMBER() OVER (ORDER BY PQ_NUM DESC) RNUM, 
+		'PQ' AS LISTTYPE,
+		Q.PQ_NUM AS NUM, 
+		Q.MEMBER_ID,
+		Q.PQ_CONTENT AS CONTENT,
+		P.PROD_NAME, 
+		Q.PQ_TITLE AS TITLE, 
+		Q.PQ_REPLY AS REPLY, 
+		TO_CHAR(Q.PQ_DATE, 'YYYY.MM.DD') AS CDATE, 
+		Q.PQ_DEL, 
+		Q.PQ_PNUM AS PNUM
+		FROM PRODUCTQUESTION Q
+		FULL OUTER JOIN PRODUCT P
+		            ON Q.PROD_NUM = P.PROD_NUM
+		WHERE
+		PQ_DEL = 0 AND MEMBER_ID = #{MEMBER_ID} AND PQ_PNUM IS NULL
+		]]>
+		<include refid="PQSearch"></include>
+		<include refid="PQOrderby"></include>
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	<sql id="PQSearch">
+		<if test="searchType != null">
+			<if test="searchType == 'title'.toString()">AND (PQ_TITLE LIKE '%${keyword}%')</if>
+			<if test="searchType == 'content'.toString()">AND (PQ_CONTENT LIKE '%' || #{keyword} || '%')</if>
+		</if>
+	</sql>
+	
+	<sql id="PQOrderby">
+		ORDER BY
+		  PQ_PNUM DESC, PQ_NUM ASC
+	</sql>
+	
+	<select id="selectPQDetail" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT Q.PQ_NUM AS NUM, Q.MEMBER_ID, P.PROD_NAME, Q.PQ_TITLE AS TITLE,
+		 Q.PQ_CONTENT AS CONTENT, Q.PQ_PNUM AS PNUM, TO_CHAR(Q.PQ_DATE, 'YYYY.MM.DD') AS CDATE
+		FROM PRODUCTQUESTION Q
+		FULL OUTER JOIN PRODUCT P
+		            ON Q.PROD_NUM = P.PROD_NUM
+		WHERE
+		PQ_DEL = 0 AND PQ_NUM = ${PQ_NUM} OR PQ_PNUM = ${PQ_NUM}
+		ORDER BY
+		  PQ_PNUM DESC, PQ_NUM ASC
+		]]>
+	</select>
+	
+	<select id="selectPQModifyForm" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT PQ_NUM, MEMBER_ID
+		FROM PRODUCTQUESTION
+		WHERE
+		PQ_DEL = 0 AND PQ_NUM = ${PQ_NUM}
+
+		]]>
+	</select>
+	
+	<update id="updatePQ" parameterType="hashmap"> 
+	<![CDATA[ 
+		UPDATE PRODUCTQUESTION
+		SET PQ_TITLE = #{TITLE}, PQ_CONTENT = #{CONTENT} 
+		WHERE PQ_NUM = ${NUM} 
+	]]>	
+	</update>
+	
+	<update id="deletePQ" parameterType="hashmap"> 
+	<![CDATA[ 
+		UPDATE PRODUCTQUESTION
+		SET PQ_DEL = 1 
+		WHERE PQ_NUM = ${PQ_NUM} 
+	]]>	
+	</update>
+	
+	
+	<!-- QNA -->
+	<select id="selectQNAList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<include refid="common.pagingPre"/>
+		<![CDATA[ 
+		SELECT 
+			ROW_NUMBER() OVER (ORDER BY QNA_NUM DESC) RNUM, 'QNA' as LISTTYPE, MEMBER_ID,
+		  QNA_NUM AS NUM, QNA_TITLE AS TITLE, QNA_CONTENT AS CONTENT, TO_CHAR(QNA_DATE, 'YYYY.MM.DD') AS CDATE, QNA_REPLY AS REPLY
+		FROM 
+		  QNA 
+		WHERE 
+		  QNA_DEL = 0 AND MEMBER_ID = #{MEMBER_ID} AND QNA_PNUM IS NULL
+		]]>
+		<include refid="QNASearch"></include>
+		<include refid="QNAOrderby"></include>
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	<sql id="QNASearch">
+		<if test="searchType != null">
+			<if test="searchType == 'title'.toString()">AND (QNA_TITLE LIKE '%${keyword}%')</if>
+			<if test="searchType == 'content'.toString()">AND (QNA_CONTENT LIKE '%' || #{keyword} || '%')</if>
+		</if>
+	</sql>
+	
+	<sql id="QNAOrderby">
+		ORDER BY 
+		  QNA_pnum DESC, QNA_NUM ASC
+	</sql>
+	
+	
+	<select id="selectQNADetail" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT 
+		  QNA_NUM AS NUM, QNA_TITLE AS TITLE, MEMBER_ID, QNA_CONTENT AS CONTENT, TO_CHAR(QNA_DATE, 'YYYY.MM.DD') AS  CDATE, QNA_PNUM AS PNUM
+		FROM 
+		  QNA 
+		WHERE 
+		  QNA_DEL = 0 AND QNA_NUM = ${QNA_NUM} OR QNA_PNUM = ${QNA_NUM}
+		ORDER BY 
+		  QNA_PNUM DESC, QNA_NUM ASC
+		]]>
+	</select>
+	<select id="selectQNAModifyForm" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT 
+		  QNA_NUM, MEMBER_ID
+		FROM 
+		  QNA 
+		WHERE 
+		  QNA_DEL = 0 AND QNA_NUM = ${QNA_NUM}
+		]]>
+	</select>
+	
+	<update id="updateQNA" parameterType="hashmap"> 
+	<![CDATA[ 
+		UPDATE QNA
+		SET QNA_TITLE = #{TITLE}, QNA_CONTENT = #{CONTENT} 
+		WHERE QNA_NUM = ${NUM} 
+	]]>	
+	</update>
+	
+	<update id="deleteQNA" parameterType="hashmap"> 
+	<![CDATA[ 
+		UPDATE QNA
+		SET QNA_DEL = 1 
+		WHERE QNA_NUM = ${QNA_NUM} 
+	]]>	
+	</update>
+	<!-- MyAccount -->
+	<select id="selectAccount" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT 
+		  *
+		FROM 
+		  MEMBER 
+		WHERE 
+		  MEMBER_ID = #{MEMBER_ID} 
+		]]>
+	</select>
+	
+	<update id="updateAccount" parameterType="hashmap"> 
+	<![CDATA[ 
+		UPDATE MEMBER
+		SET MEMBER_ID = #{MEMBER_ID}, MEMBER_PW = #{MEMBER_PW}, 
+			MEMBER_EMAIL = #{MEMBER_EMAIL}, MEMBER_ZONCODE = #{MEMBER_ZONCODE},
+			MEMBER_ADDRESS1 = #{MEMBER_ADDRESS1}, MEMBER_ADDRESS2 = #{MEMBER_ADDRESS2}, 
+			MEMBER_PHONE1 = #{MEMBER_PHONE1}, MEMBER_PHONE2 = #{MEMBER_PHONE2}
+		WHERE MEMBER_NUM = ${MEMBER_NUM}
+	]]>	
+	</update>
+	
+	
+	<!-- MyOrder -->
+	<select id="selectOrderList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<include refid="common.pagingPre"/>
+		 
+		<![CDATA[ 
+		SELECT AA.* 
+	    FROM(SELECT 
+	        DISTINCT RANK() OVER (PARTITION BY B.ORDER_NUM
+	                        ORDER BY D.DORDER_NUM DESC) AS RANKING, --그룹별 순번(첫번째 오더)
+	        D.ORDER_NUM,
+	        ROW_NUMBER() OVER (ORDER BY D.ORDER_NUM DESC) RNUM,
+	        CNT,
+	        TO_CHAR(D.RENTAL_START, 'YYYY.MM.DD') AS RENTAL_START,
+	        TO_CHAR(D.RENTAL_END, 'YYYY.MM.DD') AS RENTAL_END,
+	        P.PROD_NAME,
+	        P.PROD_CONTEXT,
+	        TO_CHAR(B.ORDER_DATE, 'YYYY.MM.DD') AS ORDER_DATE
+	    FROM (SELECT ORDER_NUM, COUNT(ORDER_NUM) AS CNT FROM DORDER
+	    GROUP BY ORDER_NUM) C
+	    FULL OUTER JOIN BORDER B
+	        ON C.ORDER_NUM = B.ORDER_NUM
+	    FULL OUTER JOIN DORDER D
+	        ON B.ORDER_NUM = D.ORDER_NUM
+	    FULL OUTER JOIN PRODUCT P
+	        ON D.PROD_NUM = P.PROD_NUM
+	    WHERE B.MEMBER_ID = #{MEMBER_ID}      --멤버ID에 따라 달라짐
+	    AND ORDER_NUM IS NOT NULL
+        ORDER BY ORDER_NUM DESC
+	    )AA
+	     WHERE
+	        RANKING <= 1 
+		]]>
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	
+	<select id="selectOrderDetailStatus" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT DISTINCT ORDER_PRICE, ORDER_NUM, ORDER_RCV_ADDRESS1, ORDER_RCV_ADDRESS2, 
+		ORDER_MEMO, ORDER_DPRICE, TO_CHAR(ORDER_DATE, 'YYYY.MM.DD') AS ORDER_DATE
+		FROM BORDER 
+		WHERE ORDER_NUM = ${ORDER_NUM}
+		]]>
+	</select>
+	
+	<select id="selectRefundProduct" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT D.DORDER_NUM, B.ORDER_NUM ,P.PROD_NAME, D.PROD_NUM
+			FROM DORDER D 
+                FULL OUTER JOIN BORDER B
+                    ON D.ORDER_NUM = B.ORDER_NUM
+				FULL OUTER JOIN PRODUCT P
+					ON D.PROD_NUM = P.PROD_NUM
+						WHERE DORDER_NUM = ${DORDER_NUM}	
+		]]>
+	</select>
+	
+	<update id="orderRefund" parameterType="hashmap"> 
+		UPDATE DORDER
+		<if test="type == 'refund'">SET ORDER_STATUS = '취소 신청'</if>
+		<if test="type == 'return'">SET ORDER_STATUS = '반품 신청'</if>
+		<if test="type == 'change'">SET ORDER_STATUS = '교환 신청'</if>
+		WHERE DORDER_NUM = ${DORDER_NUM}
+	</update>
+	
+	<select id="rentalDate" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT DISTINCT TO_CHAR(D.RENTAL_START, 'YYYY.MM.DD') AS RENTAL_START,TO_CHAR(D.RENTAL_END, 'YYYY.MM.DD') AS  RENTAL_END
+		FROM BORDER B
+				FULL OUTER JOIN DORDER D
+				    ON B.ORDER_NUM = D.ORDER_NUM
+				    WHERE B.ORDER_NUM = ${ORDER_NUM} AND RENTAL_START IS NOT NULL
+		]]>
+	</select>
+
+	<select id="selectPOrderDetail" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT D.DORDER_NUM, B.ORDER_NUM, P.PROD_NAME, P.PROD_THUMB, D.PROD_COUNT, D.ORDER_STATUS, P.PROD_NUM,
+		TO_CHAR(D.RENTAL_START, 'YYYY.MM.DD') AS RENTAL_START, P.PROD_PRICE, P.PROD_CONTEXT  
+		FROM BORDER B
+	    FULL OUTER JOIN DORDER D
+	        ON B.ORDER_NUM = D.ORDER_NUM
+	            FULL OUTER JOIN PRODUCT P
+	                ON D.PROD_NUM = P.PROD_NUM
+	    WHERE B.ORDER_NUM = ${ORDER_NUM} AND RENTAL_START IS NULL
+		]]>
+	</select>
+ 
+	<select id="selectROrderDetail" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT D.DORDER_NUM, B.ORDER_NUM, P.PROD_NAME, P.PROD_NUM, P.PROD_THUMB, D.PROD_COUNT, D.ORDER_STATUS, TO_CHAR(D.RENTAL_START, 'YYYY.MM.DD') AS RENTAL_START, P.PROD_RPRICE, P.PROD_CONTEXT  
+		FROM BORDER B
+	    FULL OUTER JOIN DORDER D
+	        ON B.ORDER_NUM = D.ORDER_NUM
+	            FULL OUTER JOIN PRODUCT P
+	                ON D.PROD_NUM = P.PROD_NUM
+	    WHERE B.ORDER_NUM = ${ORDER_NUM} AND RENTAL_START IS NOT NULL
+		]]>
+	</select>
+	
+	<delete id="deletePart" parameterType="hashmap"> 
+	<![CDATA[ 
+		DELETE FROM DORDER
+		WHERE DORDER_NUM in (${DORDER_NUM})
+	]]>	
+	</delete>
+	
+	<delete id="deleteAll" parameterType="hashmap"> 
+	<![CDATA[ 
+		DELETE FROM BORDER
+		WHERE ORDER_NUM = ${ORDER_NUM}
+	]]>	
+	</delete>
+
+	<!-- Cart -->
+	<select id="selectCartList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT C.CART_NUM, C.MEMBER_ID, P.PROD_NAME, P.PROD_PRICE, P.PROD_CONTEXT, C.PROD_COUNT, C.CART_RENTAL
+	    FROM CART C
+	    FULL OUTER JOIN PRODUCT P
+	        ON C.PROD_NUM = P.PROD_NUM
+	    WHERE 
+	    MEMBER_ID = #{MEMBER_ID}
+		]]>
+	</select>
+
+	<select id="selectCartBuyingList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT C.CART_NUM, C.MEMBER_ID, P.PROD_NAME, P.PROD_PRICE, P.PROD_CONTEXT, C.PROD_COUNT, C.CART_RENTAL
+	    FROM CART C
+	    FULL OUTER JOIN PRODUCT P
+	        ON C.PROD_NUM = P.PROD_NUM
+	    WHERE 
+	    MEMBER_ID = #{MEMBER_ID} AND CART_RENTAL = 0
+		]]>
+	</select>
+
+	<select id="selectCartRentalList" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT C.CART_NUM, C.MEMBER_ID, P.PROD_NAME, P.PROD_RPRICE, P.PROD_CONTEXT, C.PROD_COUNT, C.CART_RENTAL
+	    FROM CART C
+	    FULL OUTER JOIN PRODUCT P
+	        ON C.PROD_NUM = P.PROD_NUM
+	    WHERE 
+	    MEMBER_ID = #{MEMBER_ID} AND CART_RENTAL = 1
+		]]>
+	</select>
+
+	<select id="selectCartBuyingPrice" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT sum(c.prod_count * (select prod_price from product where prod_num = c.prod_num)) as price
+		FROM CART c
+		WHERE c.member_id=#{MEMBER_ID} and c.cart_rental=0
+		group by c.member_id
+		]]>
+	</select>
+
+	<select id="selectCartRentalPrice" parameterType="hashmap"
+		resultType="hashmap"> 
+		<![CDATA[ 
+		SELECT sum(c.prod_count * (select prod_rprice from product where prod_num = c.prod_num)) as price
+		FROM CART c
+		WHERE c.member_id=#{MEMBER_ID} and c.cart_rental=1
+		group by c.member_id
+		]]>
+	</select>
+
+
+</mapper>
+

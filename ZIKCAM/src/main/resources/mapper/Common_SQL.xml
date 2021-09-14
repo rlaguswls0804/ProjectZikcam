@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="common">
+	
+	<select id="selectFileInfo" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT
+			    FILE_STD,
+			   	FILE_ORG
+			FROM
+			    FILES
+			WHERE
+				FILE_PARENT = #{FILE_PARENT} AND
+			    FILE_PARENT_NUM = #{FILE_PARENT_NUM}
+		]]>
+	</select>
+	
+	<sql id="pagingPre">
+		<![CDATA[
+   			SELECT 
+			    AAA.*
+			FROM(
+			    SELECT 
+			        COUNT(*) OVER() AS TOTAL_COUNT,
+			        AA.*
+			    FROM(  
+ 		]]>
+ 	</sql>
+ 	
+ 	<sql id="pagingPost">
+ 		<![CDATA[
+ 			 	) AA
+			) AAA
+			WHERE 
+			    AAA.RNUM BETWEEN #{START} AND #{END}
+ 		]]>
+ 	</sql>
+ 	
+ 	<sql id="pagingPost2">
+ 		<![CDATA[
+ 			 	) AA
+ 			 	WHERE 
+ 			 		RANKING <= 1
+			) AAA
+			WHERE 
+			    AAA.RNUM BETWEEN #{START} AND #{END}
+ 		]]>
+ 	</sql>
+</mapper>

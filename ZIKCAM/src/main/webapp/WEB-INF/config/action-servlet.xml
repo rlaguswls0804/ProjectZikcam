@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<beans xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:p="http://www.springframework.org/schema/p" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+						http://www.springframework.org/schema/mvc 
+						http://www.springframework.org/schema/mvc/spring-mvc.xsd
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd"> 
+		
+	
+	
+	<mvc:resources location="/resources/" mapping="/resources/**"/>
+					
+	<context:component-scan base-package="zikcam" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+		<context:include-filter type="annotation" expression="org.springframework.beans.factory.annotation.Autowired"/>
+	</context:component-scan>  
+	
+	<!--  //각각 path 설정 필요-->
+	<mvc:resources location="/WEB-INF/zikcam/ckeditor/" mapping="/ckeditor/**"/>
+	
+	<mvc:annotation-driven>
+		<mvc:argument-resolvers>
+			<bean class="zikcam.common.resolver.CustomMapArgumentResolver"></bean>		
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+	
+	<mvc:default-servlet-handler/>
+		
+	<mvc:interceptors> 
+		<mvc:interceptor> 
+			<mvc:mapping path="/**"/> 
+			<bean id="LoggerInterceptor" class="zikcam.common.logger.LoggerInterceptor"></bean> 
+		</mvc:interceptor> 
+	</mvc:interceptors> 
+	
+	<aop:aspectj-autoproxy/>
+	<bean id="loggerAspect" class="zikcam.common.logger.LoggerAspect" />
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+	
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="1" /> 
+	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+	 
+	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="2" 
+		p:viewClass="org.springframework.web.servlet.view.JstlView" 
+		p:prefix="/WEB-INF/zikcam/" p:suffix=".jsp"> 
+	</bean>
+	
+	<!-- tiles -->
+	<bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver"
+	        p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView" p:order="0">
+	 </bean>
+	     
+	 <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+	     <property name="definitions">
+	         <list>
+	             <value>/WEB-INF/tiles/tiles-def.xml</value>
+	         </list>
+	     </property>
+	 </bean> 
+	<!-- MultipartResolver 설정 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+		p:maxUploadSize="10000000"
+		p:maxInMemorySize="10000000">
+	</bean>
+	
+	<!-- ck에디터 파일 업로드 경로 -->
+	<mvc:resources mapping="/ckUpload/**" location="/resources/ckUpload/" />
+</beans>

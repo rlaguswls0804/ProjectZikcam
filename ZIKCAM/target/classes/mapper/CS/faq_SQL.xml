@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="faq">
+	<!-- 글 목록 -->
+	<select id="selectFaqList" parameterType="hashmap" resultType="hashmap">
+		<include refid="common.pagingPre"/>	
+		<![CDATA[	
+			SELECT 
+			  ROW_NUMBER() OVER (ORDER BY FAQ_NUM DESC) RNUM,
+			  FAQ_NUM,
+			  FAQ_CATEGORY,
+			  FAQ_QUESTION,
+			  FAQ_ANSWER,
+			  FAQ_HITCOUNT,
+			  TO_CHAR(FAQ_DATE, 'YYYY.MM.DD') AS FAQ_DATE
+			FROM 
+			  FAQ
+			WHERE 
+			  FAQ_DEL = 0   
+		]]>	  
+		<include refid="common.pagingPost"/>	
+	</select> 
+	 
+	<select id="selectFaqList2" parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			  FAQ_NUM,
+			  FAQ_CATEGORY,
+			  FAQ_QUESTION,
+			  FAQ_ANSWER,
+			  FAQ_HITCOUNT,
+			  TO_CHAR(FAQ_DATE, 'YYYY.MM.DD') AS FAQ_DATE
+			FROM 
+			  FAQ
+			WHERE 
+			  FAQ_DEL = 0   
+		  	<include refid="search"/>
+			<include refid="sort"/>
+			ORDER BY FAQ_NUM DESC
+	</select>
+	
+	
+	<sql id="search">
+		<if test="searchType != null">
+			<if test="searchType == 'all'.toString()">AND (FAQ_QUESTION LIKE '%' || #{keyword} || '%' OR FAQ_ANSWER LIKE '%' || #{keyword} || '%')</if>
+		</if>
+	</sql>
+	
+	<sql id="sort">
+		<if test="sortType != null">
+			<if test="sortType == 'deli'.toString()">AND FAQ_CATEGORY = '배송문의'</if>
+			<if test="sortType == 'refund'.toString()">AND FAQ_CATEGORY = '반품/교환/환불'</if>
+			<if test="sortType == 'order'.toString()">AND FAQ_CATEGORY = '주문/결제'</if>
+			<if test="sortType == 'member'.toString()">AND FAQ_CATEGORY = '회원서비스'</if>
+		</if>
+	</sql>
+	
+	
+	<!-- 글쓰기 -->
+	<insert id="insertFaq" parameterType="hashmap">
+		<!-- <selectKey keyProperty="QNA_NUM" resultType="string" order="BEFORE">
+			SELECT SEQ_QNA_NUM.NEXTVAL FROM DUAL
+		</selectKey> -->
+	<![CDATA[
+		INSERT INTO FAQ
+		VALUES(
+		    SEQ_FAQ_NUM.NEXTVAL,
+		    #{FAQ_CATEGORY},
+		   	#{FAQ_QUESTION},
+		    #{FAQ_ANSWER},
+		    DEFAULT,
+		    SYSDATE,
+		    DEFAULT
+		)
+	]]>
+	</insert>
+	<select id="selectFaqDetail" parameterType="hashmap" resultType="hashmap">	
+	<![CDATA[
+		SELECT 
+		  FAQ_NUM,
+		  FAQ_CATEGORY,
+		  FAQ_QUESTION,
+		  FAQ_ANSWER,
+		  FAQ_HITCOUNT,
+		  FAQ_DATE
+		FROM 
+		  FAQ
+		WHERE 
+		  FAQ_NUM = #{FAQ_NUM}
+	]]>	        
+		
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHitCount" parameterType="hashmap">
+		<![CDATA[
+			UPDATE FAQ
+			SET
+				FAQ_HITCOUNT = NVL(FAQ_HITCOUNT, 0) + 1
+			WHERE
+				FAQ_NUM = #{FAQ_NUM}	
+		]]>
+	</update>
+	
+	<!-- 글 수정 -->
+	<update id="updateFaq" parameterType="hashmap">
+		<![CDATA[
+		UPDATE 
+		    FAQ
+		SET
+		    FAQ_CATEGORY = #{FAQ_CATEGORY},
+		    FAQ_QUESTION = #{FAQ_QUESTION},
+		    FAQ_ANSWER = #{FAQ_ANSWER}
+		WHERE 
+		    FAQ_NUM = #{FAQ_NUM}
+   		]]>
+	</update>
+	<!-- 글삭제 -->
+	<update id="deleteFaq" parameterType="hashmap">
+		<![CDATA[
+		UPDATE
+			FAQ
+		SET
+			FAQ_DEL = 1
+		WHERE
+			FAQ_NUM = #{FAQ_NUM}
+		]]>
+	</update>
+	
+
+</mapper>

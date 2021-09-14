@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="userInfo">
+	<select id="selectUserList" parameterType="hashmap" resultType="hashmap">
+	<include refid="common.pagingPre"/>
+		<![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY MEMBER_NUM DESC) AS RNUM,
+				MEMBER_NUM, 
+				MEMBER_ID, 
+				MEMBER_NAME, 
+				MEMBER_EMAIL, 
+				MEMBER_RANK, 
+				TO_CHAR(MEMBER_DATE, 'YYYY.MM.DD') AS MEMBER_DATE, 
+				MEMBER_DEL
+			FROM
+				MEMBER
+		]]>
+	<include refid="common.pagingPost"/>
+	</select>
+	
+	<select id="selectUserSearchList" parameterType="hashmap" resultType="hashmap">
+	<include refid="common.pagingPre"/>
+		<![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY MEMBER_NUM DESC) AS RNUM,
+				MEMBER_NUM, 
+				MEMBER_ID, 
+				MEMBER_NAME, 
+				MEMBER_EMAIL, 
+				MEMBER_RANK, 
+				TO_CHAR(MEMBER_DATE, 'YYYY.MM.DD') AS MEMBER_DATE, 
+				MEMBER_DEL
+			FROM
+				MEMBER
+			WHERE
+		]]>
+			<if test="searchType == 'MEMNUM'"> 
+				MEMBER_NUM LIKE '%' || #{keyword} || '%' 
+			</if> 
+			<if test="searchType == 'ID'"> 
+				MEMBER_ID LIKE '%' || #{keyword} || '%' 
+			</if>
+			<if test="searchType == 'NAME'"> 
+				MEMBER_NAME LIKE '%' || #{keyword} || '%' 
+			</if>
+			<if test="searchType == 'EMAIL'"> 
+				MEMBER_EMAIL LIKE '%' || #{keyword} || '%' 
+			</if>
+	<include refid="common.pagingPost"/>
+	</select>
+	
+	<select id="selectUserDetail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT 
+				MEMBER_NUM, 
+				MEMBER_ID, 
+				MEMBER_PW, 
+				MEMBER_NAME, 
+				MEMBER_JUMIN, 
+				MEMBER_EMAIL, 
+				MEMBER_PHONE1, 
+				MEMBER_PHONE2, 
+				MEMBER_RANK, 
+				MEMBER_ADDRESS1, 
+				MEMBER_ADDRESS2, 
+				MEMBER_ZONCODE, 
+				TO_CHAR(MEMBER_DATE, 'YYYY.MM.DD') AS MEMBER_DATE, 
+				MEMBER_DEL 
+			FROM 
+				MEMBER 
+			WHERE 
+				MEMBER_NUM = #{NUM} 
+		]]>
+	</select>
+	
+	<update id="updateUserDetail" parameterType="java.util.HashMap">
+		<![CDATA[
+			UPDATE 
+				MEMBER
+			SET
+				MEMBER_PW = #{PASSWORD}, 
+				MEMBER_PHONE1 = #{PHONE1},
+				MEMBER_PHONE2 = #{PHONE2},
+				MEMBER_RANK = #{RANK},
+				MEMBER_ADDRESS1 = #{ADDRESS1},
+				MEMBER_ADDRESS2 = #{ADDRESS2},
+				MEMBER_ZONCODE = #{ZONCODE},
+				MEMBER_DEL = #{DEL}
+			WHERE
+				MEMBER_NUM = #{NUM}
+		]]>
+	</update>
+</mapper>

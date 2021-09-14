@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="product">
+	<select id="selectMainProductList" resultType="hashmap">
+			select * from (
+				select
+					prod_num, prod_name, prod_category, prod_price,
+					prod_stock, prod_rprice, prod_rstock, prod_context,
+					prod_hitcount, prod_date, prod_del
+				from product
+				where prod_del = 0
+					and prod_stock is not null
+				<if test="category != null">
+				 and prod_category = #{category}
+				</if>
+				order by prod_hitcount DESC
+			) WHERE ROWNUM <![CDATA[<]]> 5
+		
+		<!-- select * from (
+				select 
+				    prod_num, prod_name, prod_price, prod_stock, prod_cont, 
+				    prod_category, 
+				    prod_image, 
+				    (select image_main from image i where i.image_num = prod_image) AS prod_image_main,
+				    prod_contimage, prod_conttext, prod_date, 
+				    prod_hitcount, prod_rcount, prod_del
+				from product
+				order by prod_hitcount DESC
+			) WHERE ROWNUM < 4 -->
+		<!--  where is_main = true  -->
+	
+	</select>
+	
+	
+	
+	<select id="selectOneProductList" resultType="hashmap">
+			select * from (
+				select
+					prod_num, prod_name, prod_category, prod_price,
+					prod_stock, prod_rprice, prod_rstock, prod_context,
+					prod_hitcount, prod_date, prod_del
+				from product
+				where prod_del = 0
+					and prod_stock is not null
+				<if test="category != null">
+				and prod_category = #{category}
+				</if>
+				order by prod_hitcount DESC
+			) WHERE ROWNUM <![CDATA[<]]> 2
+		
+	
+	</select>
+	
+	 
+	<select id="selectAllProductList" resultType="hashmap">
+			select * from (
+				select
+				DISTINCT RANK() OVER (PARTITION BY p.prod_num
+	                        ORDER BY p.prod_num ASC) AS RANKING,
+					p.prod_num, p.prod_name, p.prod_category, p.prod_price,
+					p.prod_stock, p.prod_rprice, p.prod_rstock, p.prod_context,
+					p.prod_hitcount, p.prod_date, p.prod_del, p.prod_thumb
+				from product p
+                full outer join wish w
+                on w.prod_num = p.prod_num
+                where p.prod_del = 0 
+                	and p.prod_stock is not null
+                <if test="category != null">
+				AND p.prod_category = #{category}
+				AND (p.PROD_NAME LIKE '%' ||  #{keyword, jdbcType=VARCHAR} || '%' )
+				</if>
+				<if test="category == null">
+				AND (p.PROD_NAME LIKE '%' ||  #{keyword, jdbcType=VARCHAR} || '%' )
+				</if>
+				<if test="sort == 'mywish'">
+				AND w.member_id = #{MEMBER_ID, jdbcType=VARCHAR}
+				</if>
+				order by 
+				<choose>
+					<when test="sort == 'lowprice'">p.prod_price ASC</when>
+					<when test="sort == 'highprice'">p.prod_price DESC</when>
+					<!-- <when test="sort == ''"></when> -->
+					<otherwise>p.prod_name DESC</otherwise>
+					 
+				</choose>
+			 	 
+			)
+			 WHERE RANKING<![CDATA[<=]]> 1
+			
+	</select>
+	
+	<!-- <sql id="search">
+		<if test="searchType != null">
+			<if test="searchType == 'all'.toString()">AND (PROD_NAME LIKE '%' ||  #{keyword} || '%' )</if> 
+		</if>
+	</sql>
+	<sql id="search2">
+		<if test="searchType != null">
+			<if test="searchType == 'all'.toString()">WHERE (PROD_NAME LIKE '%' ||  #{keyword} || '%' )</if> 
+		</if>
+	</sql> -->
+	<!-- 새로운 쿼리를 만든다. DAO, Service, Controller에 메소드를 만든다.-->
+	
+	<select id="selectProductInform" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select * from product where prod_num = #{PROD_NUM}
+	]]>
+	</select>
+	
+	<select id="selectProductDetail" parameterType="hashmap" resultType="hashmap">
+		 	SELECT 
+				<if test="MEMBER_ID != null">
+					CASE WHEN EXISTS(
+	                    SELECT * 
+	                    FROM WISH W
+	                    INNER JOIN PRODUCT P  
+	                    ON W.PROD_NUM = P.PROD_NUM
+	                    WHERE W.MEMBER_ID = #{MEMBER_ID, jdbcType=VARCHAR} AND P.PROD_NUM = #{PROD_NUM, jdbcType=VARCHAR}) 
+	                    THEN 'Y' ELSE 'N' END WISH_ACC,
+				</if>  
+				PROD_NUM,
+				PROD_NAME,
+				PROD_CATEGORY,
+				PROD_PRICE,
+				PROD_STOCK,
+				replace(PROD_CONTEXT, 'style=', '') AS PROD_CONTEXT,
+				PROD_HITCOUNT,
+				SUBSTR(PROD_THUMB, 0, INSTR(PROD_THUMB, ' style')) AS PROD_THUMB,
+				PROD_SUB
+            FROM
+            	PRODUCT  
+			WHERE 
+				PROD_DEL = 0 AND
+                PROD_NUM = #{PROD_NUM}
+		
+	</select>
+	
+	<select id="selectProductReview" parameterType="hashmap" resultType="hashmap">
+	<include refid="common.pagingPre"/>
+	<![CDATA[
+		SELECT 
+		R.REVIEW_NUM,  ROW_NUMBER() OVER (ORDER BY REVIEW_NUM DESC) RNUM, P.PROD_NAME,  R.REVIEW_TITLE AS TITLE, R.REVIEW_CONTENT AS CONTENT, P.PROD_CATEGORY,
+		TO_CHAR(R.REVIEW_DATE, 'YYYY.MM.DD') AS CDATE, R.REVIEW_LIKE 
+		FROM REVIEW R
+        FULL OUTER JOIN PRODUCT P
+            ON R.PROD_NUM = P.PROD_NUM
+		WHERE REVIEW_DEL = 0 AND R.PROD_NUM = #{PROD_NUM}
+		ORDER BY
+		REVIEW_NUM DESC
+	]]>
+	<include refid="common.pagingPost"/>
+	</select>
+	
+	<select id="selectProductQuestion" parameterType="hashmap" resultType="hashmap">
+	<include refid="common.pagingPre"/>
+	<![CDATA[
+	SELECT  
+		ROW_NUMBER() OVER (ORDER BY PQ_NUM DESC) RNUM, 
+		'PQ' AS LISTTYPE,
+		Q.PQ_NUM AS NUM, 
+		Q.MEMBER_ID,
+		Q.PQ_CONTENT AS CONTENT,
+		P.PROD_NAME, 
+		Q.PQ_TITLE AS TITLE, 
+		Q.PQ_REPLY AS REPLY, 
+		TO_CHAR(Q.PQ_DATE, 'YYYY.MM.DD') AS CDATE, 
+		Q.PQ_DEL, 
+		Q.PQ_PNUM AS PNUM
+		FROM PRODUCTQUESTION Q
+		FULL OUTER JOIN PRODUCT P
+		            ON Q.PROD_NUM = P.PROD_NUM
+		WHERE
+		PQ_DEL = 0 AND PQ_PNUM IS NULL AND Q.PROD_NUM = #{PROD_NUM}
+	]]>
+	<include refid="common.pagingPost"/>
+	</select>
+	
+	<insert id="insertProductQuestion" parameterType="hashmap">
+	<![CDATA[
+		INSERT INTO PRODUCTQUESTION
+		VALUES(
+		SEQ_PQ_NUM.NEXTVAL,
+		#{MEMBER_ID},
+		#{PROD_NUM},
+		#{TITLE},
+		#{CONTENT},
+		0,
+		default, 
+		default,
+		default
+		)
+	]]>
+	</insert>
+	
+	<insert id="insertReview" parameterType="hashmap">
+	<![CDATA[
+		INSERT INTO REVIEW
+		VALUES(
+		SEQ_REVIEW_NUM.NEXTVAL,
+		#{MEMBER_ID},
+		#{PROD_NUM},
+		#{TITLE},
+		#{CONTENT},
+		#{REVIEW_LIKE},
+		default,
+		default,
+		default
+		)
+	]]>
+	</insert>
+	
+	
+	<insert id="insertCart" parameterType="hashmap">
+	<![CDATA[
+		INSERT INTO CART VALUES(SEQ_CART_NUM.NEXTVAL,#{MEMBER_ID},#{PROD_NUM},#{PROD_COUNT}, #{CART_RENTAL}, default)
+	]]>
+	</insert>
+	
+	<select id="selectCart" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select * from cart where prod_num = #{PROD_NUM} and member_id = #{MEMBER_ID} and cart_rental = #{CART_RENTAL}
+	]]>
+	</select>
+	
+	<update id="updateCart" parameterType="hashmap">
+	<![CDATA[
+		UPDATE CART SET PROD_COUNT = #{PROD_COUNT} WHERE PROD_NUM = #{PROD_NUM} AND MEMBER_ID = #{MEMBER_ID} AND CART_RENTAL = #{CART_RENTAL}
+	]]>
+	</update>
+	
+	<select id="selectDayStock" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		select count(DISTINCT prod_serial_num) as day_stock
+                                    from rental
+                                    where prod_num = #{PROD_NUM} and rental_day between #{FIRST_DAY} and #{LAST_DAY}
+                                    group by prod_num
+	]]>
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHitCount" parameterType="hashmap">
+		<![CDATA[
+			UPDATE PRODUCT
+			SET
+				PROD_HITCOUNT = NVL(PROD_HITCOUNT, 0) + 1
+			WHERE
+				PROD_NUM = #{PROD_NUM}	
+		]]>
+	</update>
+	
+	<insert id="insertWish2" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO WISH
+			VALUES(
+			    SEQ_WISH_NUM.NEXTVAL,
+			    #{MEMBER_ID},
+			    #{PROD_NUM}
+			)
+		]]>
+	</insert>
+	
+	<delete id="deleteWish2" parameterType="hashmap">
+		<![CDATA[
+			DELETE FROM 
+				WISH
+			WHERE 
+				PROD_NUM = #{PROD_NUM} AND
+				MEMBER_ID = #{MEMBER_ID} 
+		]]>
+	</delete>
+	 
+</mapper>

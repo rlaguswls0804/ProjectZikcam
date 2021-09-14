@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="wish"> 
+<select id="selectWishList" parameterType="hashmap" resultType="hashmap">
+	<include refid="common.pagingPre"/>
+	<![CDATA[
+		SELECT
+			ROW_NUMBER() OVER (ORDER BY WISH_NUM DESC) RNUM,
+			WISH_NUM,
+			MEMBER_ID,
+			PROD_NUM
+		FROM
+			WISH
+	]]>
+	<include refid="common.pagingPost"/>
+
+</select>
+
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminReview">
+	<select id="selectReviewList" parameterType="hashmap" resultType="hashmap">
+		<include refid="common.pagingPre"/>
+		<![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY REVIEW_NUM DESC) AS RNUM,
+				R.REVIEW_NUM, 
+				R.MEMBER_ID, 
+				R.PROD_NUM, 
+				R.REVIEW_TITLE, 
+				R.REVIEW_CONTENT, 
+				R.REVIEW_LIKE, 
+				R.REVIEW_HITCOUNT,
+				TO_CHAR(R.REVIEW_DATE, 'YYYY.MM.DD') AS REVIEW_DATE,
+				R.REVIEW_DEL,
+				P.PROD_NAME,
+				P.PROD_CATEGORY
+			FROM
+				REVIEW R, PRODUCT P
+			WHERE
+				R.PROD_NUM = P.PROD_NUM
+		]]>
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	<select id="selectReviewSearchList" parameterType="hashmap" resultType="hashmap">
+		<include refid="common.pagingPre"/>
+		<![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY REVIEW_NUM DESC) AS RNUM,
+				R.REVIEW_NUM, 
+				R.MEMBER_ID, 
+				R.PROD_NUM, 
+				R.REVIEW_TITLE, 
+				R.REVIEW_CONTENT, 
+				R.REVIEW_LIKE, 
+				R.REVIEW_HITCOUNT,
+				TO_CHAR(R.REVIEW_DATE, 'YYYY.MM.DD') AS REVIEW_DATE,
+				R.REVIEW_DEL,
+				P.PROD_NAME,
+				P.PROD_CATEGORY
+			FROM
+				REVIEW R, PRODUCT P
+			WHERE
+				R.PROD_NUM = P.PROD_NUM
+		]]>
+			<if test="searchType == 'CT'"> 
+				AND (R.REVIEW_TITLE LIKE '%' || #{keyword} || '%' 
+				OR R.REVIEW_CONTENT LIKE '%' || #{keyword} || '%') 
+			</if> 
+			<if test="searchType == 'PNAME'"> 
+				AND P.PROD_NAME LIKE '%' || #{keyword} || '%' 
+			</if>
+			<if test="searchType == 'TITLE'"> 
+				AND R.REVIEW_TITLE LIKE '%' || #{keyword} || '%' 
+			</if>
+			<if test="searchType == 'CONTENT'"> 
+				AND R.REVIEW_CONTENT LIKE '%' || #{keyword} || '%' 
+			</if>
+			<if test="sortType == 'ALL'"> 
+				AND (P.PROD_CATEGORY = '텐트/타프'
+				OR P.PROD_CATEGORY = '매트/침낭'
+				OR P.PROD_CATEGORY = '테이블/체어'
+				OR P.PROD_CATEGORY = '기타')
+			</if>
+			<if test="sortType == 'TENT' || formsortType == 'TENT'"> 
+				AND P.PROD_CATEGORY = '텐트/타프'
+			</if>
+			<if test="sortType == 'MAT' || formsortType == 'MAT'"> 
+				AND P.PROD_CATEGORY = '매트/침낭'
+			</if>
+			<if test="sortType == 'CHAIR' || formsortType == 'CHAIR'"> 
+				AND P.PROD_CATEGORY = '테이블/체어'
+			</if>
+			<if test="sortType == 'ETC' || formsortType == 'ETC'"> 
+				AND P.PROD_CATEGORY = '기타'
+			</if>
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	<select id="selectReviewDetail" parameterType="hashmap"
+		resultType="hashmap">
+		<![CDATA[
+			SELECT
+				REVIEW_NUM, 
+				MEMBER_ID, 
+				PROD_NUM, 
+				REVIEW_TITLE, 
+				REVIEW_CONTENT, 
+				REVIEW_LIKE, 
+				REVIEW_HITCOUNT,
+				TO_CHAR(REVIEW_DATE, 'YYYY.MM.DD') AS REVIEW_DATE,
+				REVIEW_DEL
+			FROM
+				REVIEW
+			WHERE
+				REVIEW_NUM = #{NUM}
+			ORDER BY REVIEW_NUM DESC
+		]]>
+	</select>
+	
+	<update id="updateReviewDelete" parameterType="hashmap">
+		<![CDATA[
+			UPDATE
+				REVIEW
+			SET
+				REVIEW_DEL = 1
+			WHERE
+				REVIEW_NUM = #{NUM}
+		]]>
+	</update>
+</mapper>

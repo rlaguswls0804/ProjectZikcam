@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="notice">
+	<!-- 글 목록 -->
+	<select id="selectNoticeList" parameterType="hashmap" resultType="hashmap">
+		<include refid="common.pagingPre"/>		
+		<![CDATA[
+			SELECT 
+				ROW_NUMBER() OVER (ORDER BY NOTICE_NUM DESC) RNUM,
+				NOTICE_NUM, 
+				NOTICE_TITLE,
+				MEMBER_ID, 
+				NOTICE_CONTENT, 
+				NOTICE_HITCOUNT, 
+				TO_CHAR(NOTICE_DATE, 'YYYY.MM.DD') AS NOTICE_DATE, 
+				NOTICE_CATEGORY
+			FROM 
+				NOTICE
+			WHERE
+				NOTICE_DEL = 0
+			ORDER BY 
+				NOTICE_NUM DESC
+		]]>	        
+		<include refid="common.pagingPost"/>
+	</select>
+	
+	<select id="selectNoticeList2" parameterType="hashmap" resultType="hashmap">
+			SELECT
+				NOTICE_NUM, 
+				NOTICE_TITLE,
+				MEMBER_ID, 
+				NOTICE_CONTENT, 
+				NOTICE_HITCOUNT, 
+				TO_CHAR(NOTICE_DATE, 'YYYY.MM.DD') AS NOTICE_DATE, 
+				NOTICE_CATEGORY
+			FROM 
+				NOTICE
+			WHERE
+				NOTICE_DEL = 0
+			<include refid="sort"/>	
+			<include refid="search"/>
+			ORDER BY NOTICE_NUM DESC
+	</select>
+	
+	<sql id="search">
+		<if test="searchType != null">
+			<if test="searchType == 'all'.toString()">AND (NOTICE_TITLE LIKE '%' || #{keyword} || '%' OR NOTICE_CONTENT LIKE '%' || #{keyword} || '%')</if>
+		</if>
+	</sql>
+	
+	<sql id="sort">
+		<if test="sortType != null">
+			<if test="sortType == 'notice'.toString()">AND NOTICE_CATEGORY = '공지사항'</if>
+			<if test="sortType == 'event'.toString()">AND NOTICE_CATEGORY = '이벤트'</if>
+			<if test="sortType == 'info'.toString()">AND NOTICE_CATEGORY = '정보'</if>
+			<if test="sortType == 'etc'.toString()">AND NOTICE_CATEGORY = '기타'</if>
+		</if>
+	</sql>
+	
+	
+	<!-- 글쓰기 --> 
+	<insert id="insertNotice" parameterType="hashmap" useGeneratedKeys="true" keyProperty="NOTICE_NUM">
+		<selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+			SELECT SEQ_NOTICE_NUM.NEXTVAL FROM DUAL
+		</selectKey>
+	<![CDATA[
+			INSERT INTO NOTICE 
+			VALUES(
+				#{IDX}, 
+				'admin01', 
+				#{NOTICE_CATEGORY}, 
+				#{NOTICE_TITLE}, 
+				#{NOTICE_CONTENT},
+				DEFAULT,
+				DEFAULT,
+				DEFAULT
+			)
+	]]>
+	</insert>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHitCount" parameterType="hashmap">
+		<![CDATA[
+			UPDATE NOTICE
+			SET
+				NOTICE_HITCOUNT = NVL(NOTICE_HITCOUNT, 0) + 1
+			WHERE
+				NOTICE_NUM = #{NOTICE_NUM}	
+		]]>
+	</update>
+	<!-- 상세보기 -->
+	<select id="selectNoticeDetail" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT
+  				NOTICE_NUM, 
+  				NOTICE_TITLE,
+  				NOTICE_CONTENT, 
+  				NOTICE_DATE, 
+  				NOTICE_HITCOUNT,
+  				NOTICE_CATEGORY		
+			FROM 
+  				NOTICE
+			WHERE
+ 				NOTICE_NUM = #{NOTICE_NUM}
+		]]>
+	</select>
+	<!-- 글 수정 -->
+	<update id="updateNotice" parameterType="hashmap">
+		<![CDATA[
+		UPDATE
+			NOTICE
+		SET
+			NOTICE_TITLE = #{NOTICE_TITLE}, 
+			NOTICE_CATEGORY = #{NOTICE_CATEGORY},
+			NOTICE_CONTENT = #{NOTICE_CONTENT}	
+		WHERE
+			NOTICE_NUM = #{NOTICE_NUM}
+		]]>
+	</update>
+	<!-- 글삭제 -->
+	<update id="deleteNotice" parameterType="hashmap">
+		<![CDATA[
+		UPDATE
+			NOTICE
+		SET
+			NOTICE_DEL = 1
+		WHERE
+			NOTICE_NUM = #{NOTICE_NUM}
+		]]>
+	</update>
+	
+	<!-- NOTICE 파일 추가 -->
+	<insert id="insertNoticeFile" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO FILES(
+    			FILE_NUM,
+    			FILE_ORG,
+    			FILE_STD,
+    			FILE_SIZE,
+    			FILE_TABLE,
+    			FILE_TABLE_NUM,
+    			FILE_DATE,
+    			FILE_DEL
+			)
+			VALUES
+			(
+    			SEQ_FILE_NUM.NEXTVAL,
+    			#{FILE_ORG},
+    			#{FILE_STD},
+    			#{FILE_SIZE},
+   				'NO',
+    			#{FILE_TABLE_NUM},
+    			SYSDATE,
+    			DEFAULT
+    		)
+
+		]]>
+	</insert>
+	
+	<!-- 파일 상세보기 -->
+	<select id="selectNoticeFileList" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT
+        		FILE_NUM,
+        		FILE_STD,
+        		FILE_ORG
+			FROM
+        		FILES
+			WHERE
+	    		FILE_TABLE = 'NO'
+	       		AND FILE_TABLE_NUM = #{NOTICE_NUM}
+	       		AND FILE_DEL = 0
+
+		]]> 
+	</select>
+	<!-- 파일 수정 -->
+	<update id="deleteNoticeFileList" parameterType="hashmap">
+		<![CDATA[
+			UPDATE	
+				FILES
+			SET		
+				FILE_DEL = '1'
+			WHERE	
+				FILE_TABLE = 'NO' AND
+				FILE_TABLE_NUM = #{NOTICE_NUM}
+				
+		]]>
+    </update>
+	 
+	 <update id="updateNoticeFile" parameterType="hashmap">
+		<![CDATA[
+			UPDATE	
+				FILES
+			SET		
+				FILE_DEL = '0'
+			WHERE
+				FILE_TABLE = 'NO' AND
+				FILE_TABLE_NUM = #{NOTICE_NUM}
+		]]>
+    </update>
+	
+</mapper>
