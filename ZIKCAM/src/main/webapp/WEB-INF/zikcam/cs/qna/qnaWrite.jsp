@@ -22,7 +22,6 @@
 						<font color="gray">*이미지, 동영상 첨부하실 때는 반드시 줄 바꿈(Enter)후 첨부해주세요.</font>
 						<hr />
 						
-						관리자가 아닐때만 활성화
 						<form id="frm" name="frm" method="GET" enctype="multipart/form-data">
 						<table class="table">
 							<tr bgcolor="gray" align="center">

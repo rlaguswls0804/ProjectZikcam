@@ -130,8 +130,12 @@
 						 
 						<h5>
 							<b>대여 상품</b>&nbsp;&nbsp; 
+						<c:if test="${list2.size() != 0 }">	
 							<input type="text" id="testDatepicker1" name="rental_start"/> ~ <input type="text" id="testDatepicker2" name="rental_end"/>&nbsp;&nbsp;
-							
+						</c:if>	
+						<c:if test="${list2.size() == 0 }">	
+							<input type="text" id="testDatepicker1" name="rental_start" hidden="input"/> ~ <input type="text" id="testDatepicker2" name="rental_end" hidden="input""/>&nbsp;&nbsp;
+						</c:if>	
 							<button type="button" class="btn btn-outline-dgray active" id="allDelete2"></button>
 							
 						</h5> 
@@ -251,7 +255,12 @@
 						
 						<div align="center" id="div_last">
 							<a href="../prod/main"><button type="button" style="width:200px; height:60px; font-size:20px; font-weight:bold;" class="btn btn-outline-danger">계속 쇼핑하기</button></a>&nbsp;&nbsp;
-							<button type="button" style="width:200px; height:60px; font-size:20px; font-weight:bold; color:white; background-color: #dc3545;" class="btn btn-outline-danger" id="nextbt">구매하기</button>
+							<c:if test="${list2.size() != 0}">
+								<button type="button" style="width:200px; height:60px; font-size:20px; font-weight:bold; color:white; background-color: #dc3545;" class="btn btn-outline-danger" id="nextbt">구매하기</button>
+							</c:if>
+							<c:if test="${list2.size() == 0}">
+								<button type="button" style="width:200px; height:60px; font-size:20px; font-weight:bold; color:white; background-color: #dc3545;" class="btn btn-outline-danger" id="nextbt2">구매하기</button>
+							</c:if>
 						</div>
 						
 						<br><br>
@@ -292,8 +301,8 @@
 				$('#testDatepicker1').val('${start_date}');
 				$('#testDatepicker2').val('${end_date}');
 			}else{
-				$('#testDatepicker1').val('${rental_start}');
-				$('#testDatepicker2').val('${rental_end}');
+				$('#testDatepicker1').val('${start_date}');
+				$('#testDatepicker2').val('${end_date}');
 			}
 			
 
@@ -854,13 +863,15 @@
 	        $('button#nextbt').on('click', function() {
 	        	// 대여 기간이 공백일때
 	        	console.log("111");
-		        if ($("#testDatepicker1").val() == "" || $("#testDatepicker2").val() == "") {
-		        	$("#rental_title").html("<font color='red'> * 대여할 기간을 선택해주세요.</font><br>");
-		        	document.getElementById('testDatepicker1').focus();
-		        		
-		        	if($("#testDatepicker1").val() != "") {
-		        		document.getElementById('testDatepicker2').focus();
-		        	}
+	        	if(${rental_start == ""}){
+			        if ($("#testDatepicker1").val() == "" || $("#testDatepicker2").val() == "") {
+			        	$("#rental_title").html("<font color='red'> * 대여할 기간을 선택해주세요.</font><br>");
+			        	document.getElementById('testDatepicker1').focus();
+			        		
+			        	if($("#testDatepicker1").val() != "") {
+			        		document.getElementById('testDatepicker2').focus();
+			        	}
+			        }
 		        } else {
 		        	// 종료일이 시작일보다 앞설때
 		        	console.log("222");
@@ -953,7 +964,11 @@
 			        	});
 			        }
 		        }
-	        })
+	        });
+			
+		    $('button#nextbt2').on('click', function() {
+		    	fn_openRentalList2();
+		    });
 		});
 		
 		function fn_openRentalList(){ 
@@ -961,6 +976,12 @@
 			comSubmit.setUrl("<c:url value='../prod/order' />");
 			comSubmit.addParam("rental_start", $("input[name=rental_start]").val());
 			comSubmit.addParam("rental_end", $("input[name=rental_end]").val()); 
+			comSubmit.submit();
+		}
+		
+		function fn_openRentalList2(){ 
+			var comSubmit = new ComSubmit(); 
+			comSubmit.setUrl("<c:url value='../prod/order' />");
 			comSubmit.submit();
 		}
 

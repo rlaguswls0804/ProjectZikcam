@@ -23,13 +23,13 @@
 		        <div id="rental_title"></div>
 		        <label for="start"><font color="white" style="font-size:1.5em">대여 시작일 :&nbsp;</font></label>
 		
-				<input style="size:1.5em; width:160px; height:32px" type="text" id="testDatepicker1" name="start_date" value="${start_date }" placeholder="날짜를 선택하주세요.">
+				<input style="size:1.5em; width:160px; height:32px" type="text" id="testDatepicker1" name="start_date" value="${start_date }" placeholder="날짜를 선택해주세요.">
 				 
 				&nbsp;
 		
 		        <label for="end"><font color="white" style="font-size:1.5em">대여 종료일 :&nbsp;</font></label>
 		
-				<input style="size:1.5em; width:160px; height:32px" type="text" id="testDatepicker2" name="end_date" value="${end_date }" placeholder="날짜를 선택하주세요.">
+				<input style="size:1.5em; width:160px; height:32px" type="text" id="testDatepicker2" name="end_date" value="${end_date }" placeholder="날짜를 선택해주세요.">
 				
 			    </td></tr>
 		    

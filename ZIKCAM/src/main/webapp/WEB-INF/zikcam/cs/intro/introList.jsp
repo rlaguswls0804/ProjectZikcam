@@ -18,7 +18,7 @@
 						</ol> -->
 						<font color="gray">당신이 <strong><U>직</U>접</strong> 고른 <strong><U>캠</U>핑</strong> 용품</font>
 						<hr />
-						<img alt="" src="../resources/images/KakaoTalk_20210908_124757248_01.jpg" style="width:500px;height:400px;"><br>
+						<img alt="" src="../resources/images/KakaoTalk_20210908_124757248_01.jpg" style="max-width:500px; max-height:400px; width:100%;height:400px;"><br>
 						
 						<h5>안녕하세요. <strong>Team직캠</strong>입니다.<br></h5>
 						직캠 홈페이지를 방문해주신 여러분, 반갑습니다.<br>
@@ -30,7 +30,7 @@
 						<h3>찾아오시는 길</h3>
 						<hr/>
 						본사주소 : 서울특별시 종로구 관철동 15-5 미려빌딩 3층 302호 1팀 직캠컴퍼니
-						<div id="map" style="width:500px;height:400px;"></div>
+						<div id="map" style="width:auto;height:400px;"></div>
 						
 						
 						<hr/>

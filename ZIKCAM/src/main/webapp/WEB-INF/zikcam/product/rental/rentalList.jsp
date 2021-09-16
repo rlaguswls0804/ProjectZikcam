@@ -383,7 +383,7 @@
 			gfn_renderPaging(params);
 				    
 			var str = "";
-			$.each(data.rentalList, function(key, value){ //오류나면 빼기
+			$.each(data.rentalList, function(key, value){
 				str +=   "<div class='col mb-5'>" +
 			                 "<div class='card h-100'>" +   
 			                 

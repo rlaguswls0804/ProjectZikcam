@@ -91,16 +91,16 @@
 				fn_openProductWrite();
 			});
 			
-			$("#updatebt").on("click", function(e) {
+			$("a[name='updatebt']").on("click", function(e) {
 				var index = $("#updatebt").index(this);
 				e.preventDefault();
-				fn_openProductModify(index);
+				fn_openProductModify($(this));
 			});
 			
-			$("#deletebt").on("click", function(e) {
+			$("a[name='deletebt']").on("click", function(e) {
 				var index = $("#deletebt").index(this);
 				e.preventDefault();
-				fn_validation(index);
+				fn_validation($(this));
 			});
 			
 			$("a[name='title']").on("click", function(e){ //썸네일 
@@ -115,17 +115,17 @@
 			comSubmit.submit();
 		}
 		
-		function fn_openProductModify(index) {
+		function fn_openProductModify(obj) {
 			var comSubmit = new ComSubmit();
 			comSubmit.setUrl("<c:url value='../admin/productUpdate' />");
-			comSubmit.addParam("PROD_NUM", $('#num').eq(index).text());  
+			comSubmit.addParam("PROD_NUM", obj.parent().find("#PNUM").val());  
 			comSubmit.submit(); 
 		}
 		
-		function fn_openProductDelete(index) {
+		function fn_openProductDelete(obj) {
 			var comSubmit = new ComSubmit();
 			comSubmit.setUrl("<c:url value='../admin/productDelete' />");
-			comSubmit.addParam("PROD_NUM", $('#num').eq(index).text());  
+			comSubmit.addParam("PROD_NUM", obj.parent().find("#PNUM").val());  
 			comSubmit.submit(); 
 		}
 		
@@ -185,8 +185,15 @@
 								"<td>" + "대여 수량" + "</td>" + 
 								"<td>" + value.PROD_RSTOCK + "개" + "</td>" + 
 								"<td rowspan='2' align='center' valign='middle'>" + 
-									"<button class='btn btn-outline-light' id='updatebt'>" + "상품수정" + "</button><br>" +
-									"<button class='btn btn-outline-d' id='deletebt'>" + "상품삭제" + "</button>" +
+								"<div>" +
+									"<a href='#this' name='updatebt'>" +
+										"<button class='btn btn-outline-light'>" + "상품수정" + "</button><br>" +
+									"</a>" +
+									"<a href='#this' name='deletebt'>" +
+										"<button class='btn btn-outline-d'>" + "상품삭제" + "</button>" +
+									"</a>" +
+										"<input type='hidden' id='PNUM' name='PNUM' value=" + value.PROD_NUM + ">" +
+								"</div>" +
 								"</td>" + 
 							"</tr>" + 
 							"<tr>" +
@@ -208,11 +215,11 @@
 					e.preventDefault();
 					fn_openProductWrite();
 				}); 
-				
-				$("#updatebt").on("click", function(e) {
+				 
+				$("a[name='updatebt']").on("click", function(e) {
 					var index = $("#updatebt").index(this);
 					e.preventDefault();
-					fn_openProductModify(index);
+					fn_openProductModify($(this));
 				});
 				
 				$("a[name='title']").on("click", function(e){ //제목 

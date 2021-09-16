@@ -4,6 +4,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
+        <%@ include file="/WEB-INF/include/include-header.jspf" %>
     </head>
     <body>
         <!-- Header-->
@@ -172,7 +173,12 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="/zikcam/prod/rentalMatt">대여하러 가기</a></div>
+                            <c:if test="${session_MEM_ID == null }">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" name="rental3" href="#this">대여하러 가기</a></div>
+                            </c:if>
+                            <c:if test="${session_MEM_ID != null }">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" name="rental4" href="#this">대여하러 가기</a></div>
+                            </c:if>
                             </div>
                         </div>
                     </div>
@@ -233,5 +239,51 @@
                 </div>
             </div>
         </section>
-    </body>
+<%@ include file="/WEB-INF/include/include-body.jspf" %>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("a[name=rental3]").on("click", function(e){
+			e.preventDefault();
+			fn_validation();
+		});
+		
+		$("a[name=rental4]").on("click", function(e){
+			e.preventDefault();
+			fn_openRentalDate(); 
+		});
+		
+		$("button[name=main]").on("click", function(e){
+			e.preventDefault();
+			fn_ProductList(); 
+		});
+		
+	});
+	
+	function fn_openLogin(){
+		var comSubmit = new ComSubmit();
+		comSubmit.setUrl("<c:url value='../member/loginForm' />");
+		comSubmit.submit();
+	}
+	
+	function fn_ProductList(){
+		var comSubmit = new ComSubmit();
+		comSubmit.setUrl("<c:url value='../prod/purchaseTent' />");
+		comSubmit.addParam("keyword", $('#keyword').val());
+		comSubmit.submit();
+	}
+	
+	function fn_openRentalDate(){
+		var comSubmit = new ComSubmit();
+		comSubmit.setUrl("<c:url value='../prod/rentalDate' />");
+		comSubmit.submit();
+	}
+	
+	function fn_validation() { 	   
+		   if("${session_MEM_ID == null}"){
+		      alert("대여하기는 로그인 후 이용 가능합니다");
+		      return fn_openLogin();
+		   }
+	}
+</script>
+</body>
 </html>

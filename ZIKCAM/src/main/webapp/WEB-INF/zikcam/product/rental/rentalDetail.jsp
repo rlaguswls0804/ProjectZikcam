@@ -301,7 +301,7 @@ Core theme CSS (includes Bootstrap)
 					eventName : "fn_selectQRList"
 				};
 				gfn_renderPaging(params);
-
+ 
 				var str = "";
 				str += "<table class='table table-hover' style='width: 90%; text-align: center;'>"
 						+ "<tr bgcolor='#212926' style='color: white; border-collapse: collapse; outline: 0; border: 0;'>"

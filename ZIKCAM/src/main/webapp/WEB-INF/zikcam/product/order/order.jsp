@@ -332,9 +332,14 @@
 						<br/><br/>
 						
 						<div id="last" align="center">
-							<button type="button" style="width:200px; height:60px; font-size:20px; font-weight:bold; color:white; background-color: #dc3545;" class="btn btn-outline-danger" id="paybt">결제하기</button>
+							<c:if test="${list2.size() != 0}">
+								<button type="button" style="width:200px; height:60px; font-size:20px; font-weight:bold; color:white; background-color: #dc3545;" class="btn btn-outline-danger" id="paybt">결제하기</button>
+							</c:if>
+							<c:if test="${list2.size() == 0}">
+								<button type="button" style="width:200px; height:60px; font-size:20px; font-weight:bold; color:white; background-color: #dc3545;" class="btn btn-outline-danger" id="paybt2">결제하기</button>
+							</c:if>
 						</div>
-
+ 
 						
 					</form>	
 					</div>
@@ -1085,13 +1090,71 @@
 			        	});
 			        }
 		        }
-	        })
+	        });
+	        //결제하기(구매전용)
+	        $('button#paybt2').on('click', function() {
+	        	if ($("input#in_totalPrice").val() == 0) {
+	        		alert("구매 할 상품이 없습니다!");
+	        	} else {
+	        		if ($("input:radio[name='pay']").is(':checked')) {
+		        		if ($("input[name='pay']:checked").val()=="카드 결제") {
+		        			$.ajax({
+				        		type: "POST",
+				    			url: "<c:url value='/prod/orderPay'/>",
+				    			data:{MEMBER_ID:$("input#member_id").val(), ORDER_RCV_NAME:$("input#rcv_name").val(),
+				    				ORDER_RCV_ZONCODE:$("input#rcv_zoncode").val(), ORDER_RCV_ADDRESS1:$("input#rcv_address1").val(),
+				    				ORDER_RCV_ADDRESS2:$("input#rcv_address2").val(),
+				    				ORDER_RCV_PHONE:$("input#rcv_phone").val(), ORDER_MEMO:$('textarea#memo').val(),
+				    				ORDER_DPRICE:$("input#in_dprice").val(), ORDER_PRICE:$("input#in_totalPrice").val(), 
+				    				ORDER_PAYTYPE:$("input[name='pay']:checked").val(),
+				    				RENTAL_START:$("#testDatepicker1").val(), RENTAL_END:$("#testDatepicker2").val()},
+				    			success: function(data){
+				    				fn_openOrderPay();
+				    			},
+				    			error:function(request, error) {
+
+				    			console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+				    			}
+				         	});
+		        		} else {
+		        			$.ajax({
+				        		type: "POST",
+				    			url: "<c:url value='/prod/orderTable'/>",
+				    			data:{MEMBER_ID:$("input#member_id").val(), ORDER_RCV_NAME:$("input#rcv_name").val(),
+				    				ORDER_RCV_ZONCODE:$("input#rcv_zoncode").val(), ORDER_RCV_ADDRESS1:$("input#rcv_address1").val(),
+				    				ORDER_RCV_ADDRESS2:$("input#rcv_address2").val(),
+				    				ORDER_RCV_PHONE:$("input#rcv_phone").val(), ORDER_MEMO:$('textarea#memo').val(),
+				    				ORDER_DPRICE:$("input#in_dprice").val(), ORDER_PRICE:$("input#in_totalPrice").val(), 
+				    				ORDER_PAYTYPE:$("input[name='pay']:checked").val(),
+				    				RENTAL_START:$("#testDatepicker1").val(), RENTAL_END:$("input#rental_end").val()},
+				    			success: function(data){
+				    				
+				    				
+				    				location.href="../prod/orderPaySuccess";
+				    			},
+				    			error:function(request, error) {
+
+				    			console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+				    			}
+				         	});
+		        		}
+		        	} else {
+		        		alert("결제방식을 선택해주세요!");
+		        	}
+	        	}
+	        	
+		    });
 	    });
 	    
-	    
-		
-	    
 	    function fn_openOrderPay(){
+			var comSubmit = new ComSubmit("frm");
+			comSubmit.setUrl("<c:url value='../prod/orderPay'/>");
+			comSubmit.submit();
+		}
+
+	    function fn_openOrderPay2(){
 			var comSubmit = new ComSubmit("frm");
 			comSubmit.setUrl("<c:url value='../prod/orderPay'/>");
 			comSubmit.submit();

@@ -191,6 +191,7 @@
                                 </div>
                             </div>
                             <!-- Product actions-->
+                            <c:if test="${session_MEM_ID != null}">
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                             	<div class="text-center">
                             		<a class="btn btn-outline-dark mt-auto" id="order" href="#this">구매하기</a>
@@ -202,8 +203,22 @@
                                 	<a class="btn btn-outline-dark mt-auto" id="cart" href="#this">장바구니 넣기 </a>
                                 	<input type='hidden' id='PNUM' name="PNUM" value="${product.PROD_NUM}">
                                 </div>
-                                
                             </div>
+                           </c:if>
+                           <c:if test="${session_MEM_ID == null}">
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            	<div class="text-center">
+                            		<a class="btn btn-outline-dark mt-auto" id="order2" href="#this">구매하기</a>
+                            		<input type='hidden' id='PNUM2' name="PNUM2" value="${product.PROD_NUM}">
+                            	</div>
+                           	</div>
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                	<a class="btn btn-outline-dark mt-auto" id="cart2" href="#this">장바구니 넣기 </a>
+                                	<input type='hidden' id='PNUM' name="PNUM" value="${product.PROD_NUM}">
+                                </div>
+                            </div>
+                           </c:if>
                         </div>
                     </div>
                  </c:forEach>
@@ -227,23 +242,16 @@
 		$("a[id='cart']").on("click", function(e){  //카트
 			e.preventDefault();
 			fn_openProductCart($(this));
-			/*  $.ajax({
-  				 url : '../prod/insertCart', 
-  	              type : "get",
-  	              dataType : "text",
-  	              data : {"PROD_NUM" : PROD_NUM,
-  	            		"PROD_COUNT" : 1, "CART_RENTAL" : 0},
-  	              success : function(data){ 
-  	            	var result = confirm("상품이 장바구니에 담겼습니다.\n\n장바구니로 이동하시겠습니까?");
-  	                if(result){
-  	                	fn_openProductCart();
-  	                       
-  	                }
-  	              },
-  	              error : function(data){
-  	            	 alert('error');
-  	              }
-  				}) */
+		});
+		
+		$("a[id='order2']").on("click", function(e){  //구매하기 비회원
+			e.preventDefault();
+			fn_validation();
+		});
+		
+		$("a[id='cart2']").on("click", function(e){  //카트 비회원
+			e.preventDefault();
+			fn_validation2();
 		});
 		
 		
@@ -307,6 +315,23 @@
                  
           }
 	} */
+	function fn_validation() { 	   
+		   if("${session_MEM_ID == null}"){
+		      var result = confirm("구매하기는 로그인 후 이용 가능합니다.\n\n로그인 페이지로 이동하시겠습니까?");
+		      if(result == true){
+		    	  fn_openLogin(); 
+		      }
+		   }
+	}
+	
+	function fn_validation2() { 	   
+		   if("${session_MEM_ID == null}"){
+		      var result = confirm("장바구니에 넣기는 로그인 후 이용 가능합니다.\n\n로그인 페이지로 이동하시겠습니까?");
+		      if(result == true){
+		    	  fn_openLogin(); 
+		      }
+		   }
+	}
 	  
 	history.replaceState({}, null, location.pathname);
 	</script>

@@ -102,11 +102,13 @@
 						
 						
 						<form style="float: right;">
+						<c:if test="${session_MEM_ID != null}">
 						<a href="#this" id="write">
 							<button class="btn btn-outline-dgray" 
 				            	style="outline: 1; border: 1; font-size: 0.7em; width: 80px; height: 30px;">문의추가
 				            </button>
 						</a>
+						</c:if>
 						</form>
 		
 					</div>
@@ -177,7 +179,7 @@
 	function fn_openQnaDetail(obj){
 		var comSubmit = new ComSubmit();
 		comSubmit.setUrl("<c:url value='../cs/qnaDetail' />");
-		comSubmit.addParam("QNA_NUM", obj.children().find("#QNA_NUM").val());
+		comSubmit.addParam("QNA_NUM", obj.parent().find("#QNA_NUM").val());
 		comSubmit.submit();
 	} 
 	 	  
@@ -230,7 +232,7 @@
 		});
 		body.append(str);
 			
-		$("a[name='title']").on("click", function(e){ //제목 
+		$("tr[name='title']").on("click", function(e){ //제목 
 			e.preventDefault();
 			fn_openQnaDetail($(this));
 		});
