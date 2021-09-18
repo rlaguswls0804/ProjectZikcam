@@ -64,17 +64,31 @@ Core theme CSS (includes Bootstrap)
 						<input type="hidden" id="member_id" name="member_id" value="${session_MEM_ID}">
 						<input type='hidden' id='PROD_COUNT' value="1">
         				<input type='hidden' id='CART_RENTAL' value="0">
+						
 						<input class="form-control text-center me-3" id="inputQuantity"
-							type="num" value="1" style="max-width: 3rem" />
-						<button class="btn btn-outline-dark flex-shrink-0" type="button"
-							id="goCart">
-							<i class="bi-cart-fill me-1"></i> 장바구니
-						</button>
-						&nbsp;&nbsp;&nbsp;
-						<button class="btn btn-outline-danger" type="button" id="order"
-							style="font-weight: bold; color: white; background-color: #dc3545;">
-							바로구매
-						</button>
+							type="num" value="1" style="max-width: 3rem"/>
+						<c:if test="${session_MEM_ID != null }">
+							<button class="btn btn-outline-dark flex-shrink-0" type="button"
+								id="goCart">
+								<i class="bi-cart-fill me-1"></i> 장바구니
+							</button>
+							&nbsp;&nbsp;&nbsp;
+							<button class="btn btn-outline-danger" type="button" id="order"
+								style="font-weight: bold; color: white; background-color: #dc3545;">
+								바로구매
+							</button>
+						</c:if>
+						<c:if test="${session_MEM_ID == null }">
+							<button class="btn btn-outline-dark flex-shrink-0" type="button"
+								id="cart2">
+								<i class="bi-cart-fill me-1"></i> 장바구니
+							</button>
+							&nbsp;&nbsp;&nbsp;
+							<button class="btn btn-outline-danger" type="button" id="order2"
+								style="font-weight: bold; color: white; background-color: #dc3545;">
+								바로구매
+							</button>
+						</c:if>
 						<input type='hidden' id='PNUM2' name="PNUM2" value="${map.PROD_NUM}">
 					</div>
 					
@@ -255,6 +269,21 @@ Core theme CSS (includes Bootstrap)
 						e.preventDefault();
 						fn_openProductOrder($(this));
 					});
+					
+					$("button[id='cart']").on("click", function(e){  //구매하기
+						e.preventDefault();
+						fn_openProductOrder($(this));
+					});
+					
+					$("button[id='order2']").on("click", function(e){  //구매하기 비회원
+						e.preventDefault();
+						fn_validation();
+					});
+					
+					$("button[id='cart2']").on("click", function(e){  //카트 비회원
+						e.preventDefault();
+						fn_validation2();
+					});
 				});
 
 		function fn_selectQRList(pageNo) {
@@ -377,8 +406,27 @@ Core theme CSS (includes Bootstrap)
 			comSubmit.setUrl("<c:url value='../prod/order2'/>");
 			comSubmit.addParam("PROD_NUM", obj.parent().find("#PNUM2").val()); 
 			comSubmit.addParam("CART_RENTAL", $("#CART_RENTAL").val());
-			comSubmit.addParam("PROD_COUNT", $("#PROD_COUNT").val());
+			comSubmit.addParam("PROD_COUNT", $("#inputQuantity").val());
 			comSubmit.submit(); 
+		}
+		
+		
+		function fn_validation() { 	   
+			   if("${session_MEM_ID == null}"){
+			      var result = confirm("구매하기는 로그인 후 이용 가능합니다.\n\n로그인 페이지로 이동하시겠습니까?");
+			      if(result == true){
+			    	  fn_openLogin(); 
+			      }
+			   }
+		}
+		
+		function fn_validation2() { 	   
+			   if("${session_MEM_ID == null}"){
+			      var result = confirm("장바구니에 넣기는 로그인 후 이용 가능합니다.\n\n로그인 페이지로 이동하시겠습니까?");
+			      if(result == true){
+			    	  fn_openLogin(); 
+			      }
+			   }
 		}
 	</script>
 </body>
