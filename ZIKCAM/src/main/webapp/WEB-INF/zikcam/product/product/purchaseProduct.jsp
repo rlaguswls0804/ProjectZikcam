@@ -53,59 +53,7 @@
         </header>
         
         
-       <%--  <div class="text-center text-dark">
-                <h4 class="display-5 fw-bolder" style="color:#4b4b4b"><br />대표 상품</h4>
-        </div>
-        
-  <!--       <input type='button' class='btn' name='btn' value='버튼' style="float: right;">
- -->
- 		<form id="frm" name="frm" method="get" enctype="multipart/form-data">
- 		<input type="hidden" id="MEMBER_ID" value="${session_MEM_ID}">
- 		<input type='hidden' id='PROD_COUNT' value="1">
-        <input type='hidden' id='CART_RENTAL' value="0">
-        <!-- Section-->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                    
-                   
-                    <c:forEach items="${mainProductList}" var="product">
-                    	<div class="col mb-5">
-	                        <div class="card h-100">
-	                        	<div class="badge text-white position-absolute" style="top: 0.3rem; left: 0.3rem;">
-	                        	<img id="image" onclick="changeImage()" border="0" 
-	                        	<c:choose>
-	                        		<c:when test="${product.PROD_CONTIMAGE eq '4'}">src="./images/heart_empty.png"</c:when>
-	                        		<c:otherwise>src="./images/heart_full.png"</c:otherwise>
-	                        	</c:choose>
-	                        	width="30" height="30"/>
-	                        	&nbsp;조회수 : ${product.PROD_HITCOUNT} 
-	                        	</div>
-	                            <!-- Product image-->
-	                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-	                            <!-- Product details-->
-	                            <div class="card-body p-4">
-	                                <div class="text-center">
-	                                    <!-- Product name-->
-	                                    <h5 class="fw-bolder"><c:out value="${product.PROD_NAME }" /></h5>
-	                                    <!-- Product price-->
-	                                    가격 : <c:out value="${product.PROD_PRICE}" /> 원
-	                                </div>
-	                            </div>
-	                            <!-- Product actions-->
-	                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-	                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">기타 용품 구매하기</a></div>
-	                                <%=request.getRealPath("/") %>
-	                            </div>
-	                        </div>
-	                    </div>
-	                    
-                    	
-        			</c:forEach>
-                    
-                </div>
-            </div>
-        </section> --%>
+       
         <!-- 대표 상품 -->
 
 

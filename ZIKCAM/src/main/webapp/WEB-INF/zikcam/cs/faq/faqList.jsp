@@ -16,19 +16,9 @@
 				<section class="py-5">
 					<div class="container px-4 px-lg-5 mt-5">
 						<h3>FAQ</h3>
-						<!-- <ol class="breadcrumb mb-4">
-							<li class="breadcrumb-item"><a href="index.html">배송문의</a></li>
-							<li class="breadcrumb-item active">반품/교환/환불</li>
-							<li class="breadcrumb-item active">주문/결제</li>
-							<li class="breadcrumb-item active">회원서비스</li>
-						</ol> -->
+						
 						<font color="gray">자주묻는질문</font>
-						<!--  검색 영역 -->
-						<!-- <form style="float: right;">
-
-							<input type="text" name="search" placeholder="제목 + 내용">
-							<input type="submit" value="검색">
-						</form> -->
+						
 						
 						<form action="../cs/faqList" method="get" style="float: right;" >
 							<fieldset>
@@ -95,22 +85,7 @@
 						
 							<ul class="listWrap">
 								
-								<%-- <c:forEach items="${faqList}" var="row">
-									
-								    <li class="qa_li">
-								    	<!-- 라디오박스 추후 관리자일때만 보이게 설정필요 -->
-								    	<c:if test="${member.MEMBER_RANK == 0}">
-								    		<input type="radio" name="selectFaq" value="${row.FAQ_NUM}">
-								    	</c:if>
-								        <div class="question">
-								        	<font color="gray">${row.FAQ_CATEGORY}</font>
-								            <p class="tit">${row.FAQ_QUESTION}</p>
-								            <p class="iconDiv"><img src="https://happyjung.diskn.com/data/lecture/icon_jquery_faq2_icon_arrow.png"></p>
-								        </div>
-								        <div class="answer">${row.FAQ_ANSWER}</div>
-								    </li>
 								
-								</c:forEach> --%>
 								<script>
 								$('.listWrap').empty();
 								</script>
@@ -143,25 +118,7 @@
 				e.preventDefault();
 				fn_deleteFaq();
 			});
-			/* var qnaNum = -1;
-			$('.qa_li .question').click(function(){
-				q = $(".qa_li .question").index(this); 
- 			    if(q!=qnaNum){
- 			        $('.qa_li .answer').stop(true, true).slideUp(400);
- 			        $('.qa_li').removeClass('open');
- 			        TweenMax.to($('.qa_li .question').eq(qnaNum).find('.iconDiv'), 0.4, {rotation:0});
- 			        qnaNum = q;
- 			        $('.qa_li').eq(qnaNum).addClass('open');
- 			        $('.qa_li .answer').eq(qnaNum).stop(true, true).slideDown(400);
- 			        //TweenMax.to($('.qa_li .question').eq(qnaNum).find('.iconDiv'), 0.4, {rotation:180});
- 			        TweenMax.to($('.qa_li .question').eq(qnaNum).find('.iconDiv'), 0.4, {rotation:0});
- 			    }else{
- 			        $('.qa_li .answer').eq(qnaNum).stop(true, true).slideUp(400);
- 			        $('.qa_li').eq(qnaNum).removeClass('open');
- 			        TweenMax.to($('.qa_li').eq(qnaNum).find('.question p'), 0.4, {rotation:0});
- 			        qnaNum = -1;
- 			    }
- 			}); */
+			
 			
 			$("button[name=sortType]").on('click', function(){
 				

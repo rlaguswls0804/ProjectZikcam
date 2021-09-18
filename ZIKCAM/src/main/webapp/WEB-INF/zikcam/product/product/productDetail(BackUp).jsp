@@ -71,8 +71,7 @@
                 </div>
             </div>
         </section>
-        <!-- 
-        Related items section
+        
         <section class="py-5 bg-light">
             <div class="container px-4 px-lg-5 mt-5">
                 <h2 class="fw-bolder mb-4">Related products</h2>
@@ -177,8 +176,8 @@
                     </div>
                 </div>
             </div>
-        </section> -->
-        <!-- 
+        </section>
+        
         Footer
         <footer class="py-5 bg-dark">
             <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2021</p></div>
@@ -186,6 +185,6 @@
         Bootstrap core JS
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         Core theme JS
-        <script src="js/scripts.js"></script> -->
+        <script src="js/scripts.js"></script>
     </body>
 </html>

@@ -18,15 +18,6 @@
 					<div class="container px-4 px-lg-5 mt-5">
 					
 					
-<%-- 					<c:choose> --%>
-<%-- 						<c:when test=${sortType == 'PQ' }><h3>ProductQuestion</h3></c:when> --%>
-<%-- 						<c:otherwise><h3>REVIEW</h3></c:otherwise> --%>
-<%-- 					</c:choose> --%>
-						
-						<!-- <ol class="breadcrumb mb-4">
-							<li class="breadcrumb-item"><a href="index.html">구매</a></li>
-							<li class="breadcrumb-item active">대여</li>
-						</ol> -->
 						<font color="gray">*이미지, 동영상 첨부하실 때는 반드시 줄 바꿈(Enter)후 첨부해주세요.</font>
 						
 						<hr />
