@@ -8,9 +8,9 @@
         <location>/errorPage/errorPage404</location>
 	</error-page>
 	
-	<error-page>
+	<error-page> 
 		<error-code>500</error-code>
-        <location>/errorPage/errorPageCheck</location>
+        <location>/errorPage/errorPage</location>
 	</error-page>
 	
 	<error-page>

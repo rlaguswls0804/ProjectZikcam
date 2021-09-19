@@ -21,8 +21,9 @@
 				id="sidenavAccordion">
 				<div class="sb-sidenav-menu">
 					<div class="nav">
-						<div class="sb-sidenav-menu-heading"
-							style="font-weight: bold; font-size: 2.2em;">관리자메뉴</div>
+					<a class="nav-link" href="../admin/productList" style="font-weight: bold; font-size: 1.5em; line-height: 20px;">
+						<div class="menu sb-sidenav-menu-heading">관리자메뉴</div>
+					</a>
 						<hr />
 						<a class="nav-link" href="../admin/orderList"
 							style="font-weight: bold; font-size: 1.5em; line-height: 20px;">

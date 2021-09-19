@@ -27,7 +27,7 @@
 <body>
 <!-- Navigation-->
  
-        <nav class="navbar navbar-expand-lg navbar-dark bg-white" >
+        <nav class="navbar navbar-expand-xl navbar-dark bg-white" >
         <!-- position:fixed로 상단에 고정 / margin : 여백 / z-index : 맨 위로 표시하기 width랑 height는 해보면서 조정함. -->
             <div class="container px-4 px-lg-0">
             	
@@ -77,7 +77,7 @@
                     <!-- Sidebar Toggle-->
 		            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
 		            <!-- Navbar Search-->
-                    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                    <form class="d-flex d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
 		                <div class="input-group">
 		                    <input class="form-control" type="text" placeholder="상품 검색" aria-label="Search for..." name="keyword" id="keyword" value="${keyword}" aria-describedby="btnNavbarSearch" />
 		                    <input type="hidden" name="searchType" id="searchType" value="all">
@@ -90,7 +90,7 @@
 		                </div>
 		            </form>
 		            <c:if test="${session_MEM_ID != null && session_MEM_RANK != 0}">
-				    <form class="d-flex" action="/zikcam/myPage/myCartList">
+				    <form class="d-flex d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" action="/zikcam/myPage/myCartList">
                         <button class="btn btn-outline-dark" type="submit" id="mycart" style="color:#808080">
                             <i class="bi-cart-fill me-1"></i>
                             장바구니

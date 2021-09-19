@@ -37,8 +37,26 @@
 				         <li class="nav-item"><a class="nav-link active" aria-current="page" href="/zikcam/myPage/myPageList" style="color:#4b4b4b">${session_MEM_ID}&nbsp;님</a></li>   
 				         <li class="nav-item"><a class="log nav-link active" aria-current="page" href="/zikcam/member/logout" style="color:#4b4b4b">로그아웃</a></li> 
 				         	<c:if test="${session_MEM_RANK == 0 }">
-				               <li class="nav-item"><a class="nav-link active" aria-current="page" href="/zikcam/admin/productList" style="color:#4b4b4b">관리자페이지</a></li>    
-				        	</c:if>
+ 
+ 
+				               <li class="nav-item dropdown">
+	                             <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:#4b4b4b">관리자페이지</a>
+	                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+									 	<li><a class="dropdown-item" href="../admin/orderList">주문목록</a></li>	
+									 	<li><a class="dropdown-item" href="../admin/orderCancelList">취소/반품목록</a></li>	                                 
+	                               <li><hr class="dropdown-divider" /></li>
+	                               <li><a class="dropdown-item" href="../admin/userList">회원정보</a></li>
+	                               <li><hr class="dropdown-divider" /></li>
+	                               <li><a class="dropdown-item" href="../admin/reviewList">구매후기</a></li>
+									   <li><hr class="dropdown-divider" /></li>
+									   <li><h5 class="dropdown-header">문의내역</h5></li>
+	                               <li><a class="dropdown-item" href="../admin/PQList">상품문의</a></li>
+	                               <li><a class="dropdown-item" href="../admin/QnAList">직캠문의</a></li>
+	                               <li><hr class="dropdown-divider" /></li>
+	                               <li><a class="dropdown-item" href="../admin/productList">상품목록</a></li>
+                            	</ul>
+                        		</li>  
+				        	 </c:if>
 					         <c:if test="${session_MEM_RANK == 1 }">
 					         	<li class="nav-item"><a class="nav-link active" aria-current="page" href="/zikcam/myPage/myPageList" style="color:#4b4b4b">마이페이지</a></li>
 					         </c:if>

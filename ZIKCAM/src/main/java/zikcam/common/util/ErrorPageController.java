@@ -11,6 +11,13 @@ import zikcam.common.map.CommandMap;
 @RequestMapping("/errorPage")
 public class ErrorPageController {
 
+	@RequestMapping(value = "/errorPage")
+	public ModelAndView errorPage(CommandMap commandMap, HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("/errorPage");
+		
+		return mv;
+	}
+	
 	@RequestMapping(value = "/errorPage404")
 	public ModelAndView errorPage404(CommandMap commandMap, HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("/errorPage404");

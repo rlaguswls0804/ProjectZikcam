@@ -47,11 +47,6 @@
 				alert("우편번호를 입력해주세요.");
 				$("#ZONCODE").focus();
 			  	return false;
-			}else if($("#pwModify").checked){
-				
-			}else if($("#PASSWORD").val() != ${map.MEMBER_PW }){
-				alert("비밀번호가 다릅니다.");
-				return false;
 			}else if($("#DEL").val() == 1){
 				if(!confirm("계정이 삭제처리 됩니다. 계속하시겠습니까?")){
 					alert("삭제가 취소되었습니다.");

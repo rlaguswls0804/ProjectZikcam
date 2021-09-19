@@ -190,10 +190,17 @@
    	</definition>
    	
    	
-    <!-- *admin -->
-    <!-- 에러페이지 08/21 추가 -->
+    <!-- error -->
     <definition name="/errorPage" extends="default6">
-       <put-attribute name="body" value="/WEB-INF/zikcam/admin/errorPage.jsp" />
+       <put-attribute name="body" value="/WEB-INF/zikcam/errorPage/errorPage.jsp" />
+   	</definition>
+   	
+   	<definition name="/errorPage404" extends="default6">
+       <put-attribute name="body" value="/WEB-INF/zikcam/errorPage/errorPage404.jsp" />
+   	</definition>
+   	
+   	<definition name="/errorPageCheck" extends="default6">
+       <put-attribute name="body" value="/WEB-INF/zikcam/errorPage/errorPageCheck.jsp" />
    	</definition>
     
     <!-- userInfo(회원관리) -->

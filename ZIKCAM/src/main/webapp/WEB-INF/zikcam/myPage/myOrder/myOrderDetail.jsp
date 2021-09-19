@@ -7,7 +7,7 @@
 <head>
 <%@ include file="/WEB-INF/include/include-header.jspf" %>
 <style type="text/css">
-.gdsDes img { max-width:600px; max-height:500px; width:auto; height:auto; }
+.gdsDes img { max-width:100%; max-height:400px; width:auto; height:auto; }
 .gdsDes2 img { max-width: 100px; max-height: 100px;}	
 </style>
 </head>

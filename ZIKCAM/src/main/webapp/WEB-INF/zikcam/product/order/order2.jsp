@@ -337,8 +337,7 @@
 				$('#PROD_COUNT').val(countNum);
 				$('input[name=lastPrice]').val(lastPrice);
 				$('#in_totalPrice').val(lastPrice);
-				$('#in_dprice').val(dprice);
-	        }) 
+	        });  
 	        
 	        // 수량 감소
 	        $("img[name='leftbt']").on('click', function() {
@@ -365,7 +364,6 @@
 				$('#PROD_COUNT').val(countNum);
 				$('input[name=lastPrice]').val(lastPrice);
 				$('#in_totalPrice').val(lastPrice);
-				$('#in_dprice').val(dprice);
 	        })
 	         
 	        // 결제하기
