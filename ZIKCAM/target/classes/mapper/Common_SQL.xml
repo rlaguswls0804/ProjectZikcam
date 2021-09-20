@@ -42,6 +42,13 @@
  			 	) AA
  			 	WHERE 
  			 		RANKING <= 1
+			
+ 		]]>
+ 	</sql>
+ 	
+ 	<sql id="pagingPost3">
+ 		<![CDATA[
+ 			 	
 			) AAA
 			WHERE 
 			    AAA.RNUM BETWEEN #{START} AND #{END}

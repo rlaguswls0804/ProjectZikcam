@@ -246,9 +246,7 @@
 			});
 			 
 			$("button[name=sortType]").on('click', function(){
-				
-    			var sortType = $(this).val();
-    			
+				var sortType = $(this).val();
     			
     			if(sortType == 'high') { 
     				$('#sortType').val('high');
@@ -386,7 +384,7 @@
 			$.each(data.rentalList, function(key, value){
 				str +=   "<div class='col mb-5'>" +
 			                 "<div class='card h-100'>" +   
-			                 
+			                  
 				                 "<div class='badge text-white position-absolute' id='heartView' style='top: 0.3rem; left: 0.3rem;'>" +
 				                 "&nbsp;조회수 : " + value.PROD_HITCOUNT + "</div>" +
 			                    

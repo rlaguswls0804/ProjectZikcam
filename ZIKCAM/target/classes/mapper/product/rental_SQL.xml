@@ -34,8 +34,10 @@
 			                P.PROD_RSTOCK IS NOT NULL
 		    ]]>    
 		        <include refid="sort2"/>
-				<include refid="sort"/>
-                <include refid="common.pagingPost2"/>             
+				<include refid="sort3"/>
+                <include refid="common.pagingPost2"/>   
+                <include refid="sort"/>    
+                <include refid="common.pagingPost3"/>      
 	            <include refid="search"/>	
 	</select> 
 		
@@ -44,11 +46,16 @@
 			<if test="searchType == 'all'.toString()">AND (PROD_NAME LIKE '%' ||  #{keyword} || '%' )</if> 
 		</if>
 	</sql> 
-	 
+	
 	<sql id="sort">
 		<if test="sortType != null">
-			<if test="sortType == 'low'.toString()">ORDER BY P.PROD_RPRICE ASC</if>
-			<if test="sortType == 'high'.toString()">ORDER BY P.PROD_RPRICE DESC</if>
+			<if test="sortType == 'low'.toString()">ORDER BY PROD_RPRICE ASC</if>
+			<if test="sortType == 'high'.toString()">ORDER BY PROD_RPRICE DESC</if>
+		</if>
+	</sql>
+	
+	<sql id="sort3">
+		<if test="sortType != null">
 			<if test="sortType == 'wish'.toString()">AND W.MEMBER_ID = #{MEMBER_ID}</if>
 		</if>
 	</sql>

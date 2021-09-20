@@ -243,7 +243,7 @@
 						<div align="center" id="div_total">
 							총 상품가격&nbsp;&nbsp;<font color="red"><b><fmt:formatNumber value="${totalPrice}" pattern="#,###"/></b></font> 원&nbsp;&nbsp;+&nbsp;
 							총 배송비&nbsp;&nbsp;<b><fmt:formatNumber value="${dprice}" pattern="#,###"/></b> 원&nbsp;&nbsp;=&nbsp;
-							<b>총 주문금액&nbsp;&nbsp;<font color="red"><fmt:formatNumber value="${lastPrice}" pattern="#,###"/></font> 원</b>
+							<b>총 주문금액&nbsp;&nbsp;<font color="red"><fmt:formatNumber value="${lastPrice + 2500}" pattern="#,###"/></font> 원</b>
 						</div>
 						
 						<br/>
@@ -1047,7 +1047,7 @@
     			}
         	});
 		}    
-		history.replaceState({}, null, location.pathname);
+		
         </script>
 </body>
 </html>

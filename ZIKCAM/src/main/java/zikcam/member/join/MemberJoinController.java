@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,9 @@ public class MemberJoinController {
 	
 	@Inject
 	private JavaMailSender mailSender;
+	
+	@Inject
+	PasswordEncoder passwordEncoder;
 	
 	//login
 	
@@ -69,6 +73,9 @@ public class MemberJoinController {
 	@RequestMapping(value = "/memberVerify")
 	   public ModelAndView insertMember(CommandMap commandMap) throws Exception{ //회원가입성공
 		   System.out.println(commandMap.getMap());
+		   String rawPassword = (String)commandMap.get("MEMBER_PW");
+		   String encPassword = passwordEncoder.encode(rawPassword);
+		   commandMap.put("MEMBER_PW", encPassword);
 		   memberJoinService.insertMember(commandMap.getMap());
 		   ModelAndView mv = new ModelAndView("/joinConfirm");
 		   return mv;
