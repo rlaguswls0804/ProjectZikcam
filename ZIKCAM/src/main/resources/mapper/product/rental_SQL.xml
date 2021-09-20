@@ -40,6 +40,41 @@
                 <include refid="common.pagingPost3"/>      
 	            <include refid="search"/>	
 	</select> 
+	
+	
+	<select id="selectRentalList3" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+					SELECT 
+				        COUNT(DISTINCT PROD_NUM) OVER() AS TOTAL_COUNT,
+	                    ROW_NUMBER() OVER (ORDER BY PROD_NUM ASC) RNUM,
+	
+				        AA.*
+				    FROM(  
+	
+						SELECT 
+	                		DISTINCT RANK() OVER (PARTITION BY P.PROD_NUM
+	                        ORDER BY P.PROD_NUM ASC) AS RANKING,
+							P.PROD_NUM,
+							P.PROD_NAME,
+							P.PROD_RPRICE,
+							P.PROD_RSTOCK,
+							P.PROD_CATEGORY,
+							P.PROD_HITCOUNT,
+							SUBSTR(P.PROD_THUMB, 0, INSTR(P.PROD_THUMB, ' style')) AS PROD_THUMB
+			            FROM 
+			            	PRODUCT P
+			            FULL OUTER JOIN WISH W
+			                ON P.PROD_NUM = W.PROD_NUM
+						WHERE 
+							P.PROD_DEL = 0 AND
+			                P.PROD_RSTOCK IS NOT NULL
+		    ]]>    
+		        <include refid="sort2"/>
+				<include refid="sort3"/>
+                <include refid="common.pagingPost2"/>  
+	            <include refid="search"/>
+	            <include refid="sort"/> 	
+	</select> 
 		
 	<sql id="search">
 		<if test="searchType != null">

@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-
+ 
 @Service("rentalService")
 public class RentalService {
 	Logger log = Logger.getLogger(this.getClass());
@@ -24,16 +24,14 @@ public class RentalService {
 		map.put("searchType", searchType);
 		map.put("sortType", sortType);
 		map.put("sortType2", sortType2);
-		
-		return rentalDAO.selectRentalList(map);
+		 
+		if((keyword.equals("") || keyword == null) && (sortType.equals("") || sortType == null)) {
+			return rentalDAO.selectRentalList(map);
+		}else {
+			return rentalDAO.selectRentalList3(map);
+		}
 	}
-	 
-	/* 
-	 * public List<Map<String, Object>> selectRentalList2(Map<String, Object> map)
-	 * throws Exception{
-	 * 
-	 * return rentalDAO.selectRentalList2(map); }
-	 */
+	
 	
 	public Map<String, Object> selectRentalDetail(Map<String, Object> map) throws Exception {
 		

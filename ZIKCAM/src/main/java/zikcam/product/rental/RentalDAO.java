@@ -24,6 +24,11 @@ public class RentalDAO extends AbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> selectRentalList3(Map<String, Object> map) throws Exception{
+		return (List<Map<String, Object>>) selectPagingList("rental.selectRentalList3", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> selectRentalDetail(Map<String, Object> map) throws Exception{
 		return (Map<String, Object>) selectOne("rental.selectRentalDetail", map);
 	}
