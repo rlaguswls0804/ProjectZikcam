@@ -1,9 +1,9 @@
-#ProjectZikcam
-+2021.07 ~ 2021.09 진행
-+개발 인원 : 6
-+사이트 주소 : http://zikcam.duckdns.org:9000/zikcam/prod/main
+#ProjectZikcam<br>
++2021.07 ~ 2021.09 진행<br>
++개발 인원 : 6<br>
++사이트 주소 : http://zikcam.duckdns.org:9000/zikcam/prod/main<br>
 
-##개발 배경
+##개발 배경<br>
 +캠핑상품 판매 사이트는 많은데, 반면 캠핑상품 대여 사이트는 많지 않습니다.
 +캠핑 물품을 구매하기에는 부담스럽고 대여를 편하게 할 수 있으면 좋을거 같다고 생각하여 제작하게 되었습니다.
 
