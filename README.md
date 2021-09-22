@@ -5,13 +5,13 @@ ProjectZikcam
 
 개발 배경<br>
  - 캠핑상품 판매 사이트는 많은데, 반면 캠핑상품 대여 사이트는 많지 않습니다.<br>
- - 캠핑 물품을 구매하기에는 부담스럽고 대여를 편하게 할 수 있으면 좋을거 같다고 생각하여 제작하게 되었습니다.<br>
+   캠핑 물품을 구매하기에는 부담스럽고 대여를 편하게 할 수 있으면 좋을거 같다고 생각하여 제작하게 되었습니다.<br>
 
 개발 환경 <br>
  - Language : Java(JDK 1.8), Jsp, JavaScript(Jquery, Ajax), CSS(Bootstrap)<br>
  - Web Server : Tomcat 9.0<br>
  - DB : Oracle XE 11g<br>
- - Framework : Spring4.4.8, Mybatis<br>
+ - Framework : Spring 4.0.4 RELEASE, Mybatis 3.2.2<br>
  - API : KakaoMap, I’mPort, CKEditor4, JavaMail, Daum우편번호<br>
  - Tool : STS 4.4.8, Oracle SQL Developer 20.4.1<br>
  - Cloud : Google Cloud Platform<br>
