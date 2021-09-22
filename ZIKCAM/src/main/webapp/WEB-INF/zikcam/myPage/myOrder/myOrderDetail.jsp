@@ -88,14 +88,14 @@
 									<td rowspan="2"><div align="center"
 											style="margin-top: 15px;">
 											<c:choose>
-											<c:when test="${row.ORDER_STATUS eq '배송완료'}">
+											<c:when test="${row.ORDER_STATUS eq '배송 완료'}">
 											<button
 												style="outline: 0; border: 0; border-radius: 6px; width: 140px; background-color: gray; color: white;"
 												value="update" onclick="Popup();">교환 / 반품 신청</button>
 											<br> <br>
 											<button
 												style="outline: 0; border: 0; border-radius: 6px; width: 140px; background-color: gray; color: white;"
-												value="update">후기 작성하기</button>
+												name="update" value="update">후기 작성하기</button>
 												</c:when>
 												</c:choose>
 										</div></td>
@@ -154,7 +154,7 @@
 											<a href="/zikcam/prod/writeProdQR?PROD_NUM=${row.PROD_NUM}&sortType='REVIEW'">
 											<button
 												style="outline: 0; border: 0; border-radius: 6px; width: 140px; background-color: gray; color: white;"
-												value="update">후기 작성하기</button>
+												name="update" value="update">후기 작성하기</button>
 												</a>
 												</c:when>
 												<c:when test="${row.ORDER_STATUS eq '입금 대기중' }">
@@ -239,6 +239,11 @@
 				e.preventDefault();
 				fn_orderList();
 			});	
+			
+			$("button[name=update]").on("click", function(e) { //삭제하기 버튼
+				e.preventDefault();
+				fn_write_review();
+			});	
 		});
 		function fn_deletePart() {
 			var comSubmit = new ComSubmit();
@@ -271,6 +276,12 @@
 		function fn_orderList() {
 			var comSubmit = new ComSubmit();
 			comSubmit.setUrl("<c:url value='../myPage/myOrderList' />");
+			comSubmit.submit();
+		}
+		
+		function fn_write_review() {
+			var comSubmit = new ComSubmit();
+			comSubmit.setUrl("<c:url value='../myPage/myReviewModify' />");
 			comSubmit.submit();
 		}
 		

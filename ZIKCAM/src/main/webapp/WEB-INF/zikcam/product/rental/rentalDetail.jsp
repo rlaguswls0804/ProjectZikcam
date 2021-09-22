@@ -362,10 +362,12 @@ Core theme CSS (includes Bootstrap)
 											+ "</td>" + "</tr>";
 								});
 				str += "</table>"
+					+"<c:if test='${session_MEM_ID != null}'>"
 					+"<div align='right'>"
 					+"<a href='./writeProdQR?PROD_NUM="+ ${map.PROD_NUM} + "&sortType="+ $('#formSortType').val() +"'>"
 					+"<button style='outline: 0; border: 0; border-radius: 6px; width: 140px; background-color: black; color: white;'>작성하러 가기</button>"
 					+"</a></div>"
+					+"</c:if>"
 				body.append(str);
 			}
 		}

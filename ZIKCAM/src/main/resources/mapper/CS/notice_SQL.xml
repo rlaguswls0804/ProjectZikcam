@@ -68,7 +68,7 @@
 			INSERT INTO NOTICE 
 			VALUES(
 				#{IDX}, 
-				'admin01', 
+				#{MEMBER_ID}, 
 				#{NOTICE_CATEGORY}, 
 				#{NOTICE_TITLE}, 
 				#{NOTICE_CONTENT},

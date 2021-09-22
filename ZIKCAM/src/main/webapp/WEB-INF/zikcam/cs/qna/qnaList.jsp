@@ -179,7 +179,7 @@
 	function fn_openQnaDetail(obj){
 		var comSubmit = new ComSubmit();
 		comSubmit.setUrl("<c:url value='../cs/qnaDetail' />");
-		comSubmit.addParam("QNA_NUM", obj.parent().find("#QNA_NUM").val());
+		comSubmit.addParam("QNA_NUM", obj.children().find("#QNA_NUM").val());
 		comSubmit.submit();
 	} 
 	 	  
@@ -217,7 +217,7 @@
 				
 		var str = "";
 		$.each(data.qnaList, function(key, value){
-			str += "<tr name='title' onclick=\"location.href = '#this'\">" + 
+			str += "<tr name='title' onclick=\"location.href = 'this'\">" + 
 						"<td>" + value.QNA_NUM + 
 						"<input type='hidden' id='QNA_NUM' value=" + value.QNA_NUM + ">" +
 						"</td>" + 

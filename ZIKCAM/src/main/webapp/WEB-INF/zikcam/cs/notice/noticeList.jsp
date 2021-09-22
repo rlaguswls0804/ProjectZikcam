@@ -249,7 +249,7 @@
 				
 			var str = "";
 			$.each(data.noticeList, function(key, value){ //오류나면 빼기
-				str +=	"<tr name='title' onclick=\"location.href = '#this'\">" +
+				str +=	"<tr name='title' onclick=\"location.href = 'this'\">" +
 			        		"<td>" + value.NOTICE_NUM +
 			        		"<input type='hidden' id='NOTICE_NUM' value=" + value.NOTICE_NUM + ">" +
 			        		"</td>" +

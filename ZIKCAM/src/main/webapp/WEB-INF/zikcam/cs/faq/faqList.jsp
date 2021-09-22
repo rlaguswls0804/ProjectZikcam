@@ -33,7 +33,7 @@
 								<!-- <input type="submit" value="검색" class="search_btn" onClick="onSearch()"/> -->
 								<input type="hidden" id="sortType" value="${sortType}" />
 							</div>
-							<c:if test="${session_MEM_ID eq 'admin01'}">
+							<c:if test="${session_MEM_RANK == 0}">
 							
 								<a href="#this" id="delete" style="float: right;">
 									<button class="btn btn-outline-dgray" 
@@ -271,7 +271,7 @@
 					    "</li>";
 			});
 			
-			if("${session_MEM_ID}" == 'admin01'){
+			if("${session_MEM_RANK}" == '0'){
 				body.append(str2);
 			}else {
 				body.append(str);
