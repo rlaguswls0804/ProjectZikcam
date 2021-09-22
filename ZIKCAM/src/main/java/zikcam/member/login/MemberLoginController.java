@@ -69,12 +69,12 @@ public class MemberLoginController {
 		
 		String rawPassword = (String)commandMap.get("MEMBER_PW");
 		String encPassword = passwordEncoder.encode(rawPassword);
-		commandMap.put("MEMBER_PW", rawPassword);
-		 
+		commandMap.put("MEMBER_PW", encPassword);
+		/* (chk.get("MEMBER_PW").equals(commandMap.get("MEMBER_PW"))) || */
 		if (chk==null) { // 아이디가 존재여부
 			message = "아이디가 존재하지 않습니다.";
 		} else {
-			if ((chk.get("MEMBER_PW").equals(commandMap.get("MEMBER_PW"))) || (passwordEncoder.matches(rawPassword, (String) chk.get("MEMBER_PW")))) {
+			if ((passwordEncoder.matches(rawPassword, (String) chk.get("MEMBER_PW")))) {
 				session.setAttribute("session_MEM_ID", commandMap.get("MEMBER_ID"));
 				session.setAttribute("session_MEM_RANK", chk.get("MEMBER_RANK"));
 				session.setAttribute("session_MEM_INFO", chk);
@@ -156,7 +156,7 @@ public class MemberLoginController {
 			   
 			   commandMap.put("MEMBER_ID", MEMBER_ID);
 			   commandMap.put("MEMBER_EMAIL", MEMBER_EMAIL);
-			   commandMap.put("authCode", authCode);
+			   commandMap.put("authCode", passwordEncoder.encode(authCode));
 			   MemberLoginService.updateTempPw(commandMap.getMap());
 			   return mailService.send(subject, sb.toString(),"kimhj000308@gmail.com", MEMBER_EMAIL, null);
 		}else {

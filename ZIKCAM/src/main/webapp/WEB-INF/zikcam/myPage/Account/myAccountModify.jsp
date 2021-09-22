@@ -22,7 +22,6 @@
 							<form id="frm">
 								<input type="hidden" id="MEMBER_NUM" name="MEMBER_NUM" value="${map.MEMBER_NUM }">
 								<table style="width:90%;">
-								<p align="left">보안을 위해 비밀번호를 번경하고 싶으신 고객님께서는 고객센터로 연락주시기 바랍니다.</p>
 									<tr>
 										<td>기본정보</td>
 										<td><div align ="right">나의 등급 <button>실버</button></div></td>
@@ -38,7 +37,7 @@
 									<tr>
 										<td>비밀번호</td>
 										<td>
-										<input type="password" id="MEMBER_PW" name="MEMBER_PW" value="${map.MEMBER_PW }" style="width : 100%" disabled="disabled"></td>
+										<input type="password" id="MEMBER_PW" name="MEMBER_PW" value="${map.MEMBER_PW }" style="width : 100%"></td>
 										</td>
 									</tr>
 									<tr>
