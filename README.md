@@ -15,6 +15,7 @@ ProjectZikcam
  - API : KakaoMap, I’mPort, CKEditor4, JavaMail, Daum우편번호<br>
  - Tool : STS 4.4.8, Oracle SQL Developer 20.4.1<br>
  - Cloud : Google Cloud Platform<br>
+ - OS : Ubuntu 16.04, Windows 10
 
 담당 <br>
  - 기능구현(로그인, 고객센터, 대여, 결제페이지), 파트통합, 오류 수정, 클라우드 호스팅<br>
