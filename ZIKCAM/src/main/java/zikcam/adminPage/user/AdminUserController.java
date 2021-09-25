@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,9 @@ public class AdminUserController {
 	private AdminUserService adminUserService;
 	
 	Logger log = Logger.getLogger(this.getClass());
+	
+	@Inject
+	PasswordEncoder passwordEncoder;
 	
 	//userInfo
 	
@@ -75,6 +80,7 @@ public class AdminUserController {
 	public ModelAndView userDetail(CommandMap commandMap)throws Exception {
 		ModelAndView mv = new ModelAndView("/userDetail");
 		Map<String, Object> map = adminUserService.adUserDetail(commandMap.getMap());
+		
 		mv.addObject("map", map);
 		return mv;
 	}
@@ -82,7 +88,13 @@ public class AdminUserController {
 	@RequestMapping(value = "/userModify")
 	public ModelAndView updateUser(CommandMap commandMap) throws Exception {
 		ModelAndView mv = new ModelAndView("redirect:/admin/userList");
+		
+		String rawPassword = (String)commandMap.get("PASSWORD");
+		String encPassword = passwordEncoder.encode(rawPassword);
+		commandMap.put("PASSWORD", encPassword);
+ 
 		adminUserService.adUserModify(commandMap.getMap());
+		System.out.println(commandMap.getMap());
 		return mv;
 	}
 }

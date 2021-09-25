@@ -63,7 +63,7 @@
 								</td>
 							</tr> --%>
 						</table>
-					<%-- <c:if test="${member.MEMBER_RANK == 0}"> --%>
+					<c:if test="${session_MEM_RANK == 0}">
 						<a href="#this" id="delete" style="float: right;">
 							<button class="btn btn-outline-dgray" 
 				            	style="outline: 1; border: 1; font-size: 0.7em; width: 80px; height: 30px;">삭제하기
@@ -79,7 +79,7 @@
 				            	style="outline: 1; border: 1; font-size: 0.7em; width: 80px; height: 30px;">목록으로
 				           	</button>
 						</a>
-					<%-- </c:if> --%>	
+					</c:if>	
 					</div>
 				</section>
 			</main>

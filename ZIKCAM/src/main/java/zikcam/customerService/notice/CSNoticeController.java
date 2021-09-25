@@ -79,7 +79,6 @@ public class CSNoticeController {
 		
 		return mv;
 	}
-		
 	
 	@RequestMapping(value="/noticeDetail", method = RequestMethod.GET)
 	public ModelAndView noticeDetail(CommandMap commandMap, HttpServletRequest request) throws Exception{

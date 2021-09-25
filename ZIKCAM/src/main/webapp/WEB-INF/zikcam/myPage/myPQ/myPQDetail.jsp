@@ -51,9 +51,9 @@
 							</c:choose> <a href="../myPage/myPQList"><button
 									style="outline: 0; border: 0; border-radius: 6px; width: 100px; background-color: black; color: white;"
 									value="update">내 문의</button></a>&nbsp;&nbsp;&nbsp;
-							<button
+							<a href="javascript:history.go(-1);"><button
 								style="outline: 0; border: 0; border-radius: 6px; width: 100px; background-color: black; color: white;"
-								value="update">상품페이지</button></td>
+								value="update">이전페이지</button></a></td>
 					</tr>
 				</table>
 
