@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("orderService")
 public class OrderService {
@@ -35,14 +36,17 @@ public class OrderService {
 		return orderDAO.selectOrderPurchase(map);
 	}
 	
+	@Transactional
 	public void deleteCartProduct(Map<String, Object> map) throws Exception {
 		orderDAO.deleteCartProduct(map);
 	}
 	
+	@Transactional
 	public void updateProdCount(Map<String, Object> map) throws Exception {
 		orderDAO.updateProdCount(map);
 	}
 	
+	@Transactional
 	public void updateCartDel(Map<String, Object> map) throws Exception {
 		orderDAO.updateCartDel(map);
 	}
@@ -51,22 +55,27 @@ public class OrderService {
 		return orderDAO.selectMemberInform(map);
 	}
 	
+	@Transactional
 	public void insertBorder(Map<String, Object> map)  throws Exception {
 		orderDAO.insertBorder(map);
 	}
+	
 	
 	public Map<String, Object> selectLastOrderNum(Map<String, Object> map) throws Exception {
 		return orderDAO.selectLastOrderNum(map);
 	}
 	
+	
 	public Map<String, Object> selectLastOrderNumOne(Map<String, Object> map) throws Exception {
 		return orderDAO.selectLastOrderNumOne(map);
 	}
 	
+	@Transactional
 	public void insertDorder(Map<String, Object> map)  throws Exception {
 		orderDAO.insertDorder(map);
 	}
 	
+	@Transactional
 	public void insertDorderWithNull(Map<String, Object> map)  throws Exception {
 		orderDAO.insertDorderWithNull(map);
 	}
@@ -75,10 +84,12 @@ public class OrderService {
 		return orderDAO.selectCartWithoutDel(map);
 	}
 	
+	@Transactional
 	public void updateProdStock(Map<String, Object> map) throws Exception {
 		orderDAO.updateProdStock(map);
 	}
 	
+	@Transactional
 	public void updateRProdStock(Map<String, Object> map) throws Exception {
 		orderDAO.updateRProdStock(map);
 	}
@@ -102,7 +113,8 @@ public class OrderService {
 	public Map<String, Object> sumRental(Map<String, Object> map) throws Exception {
 		return orderDAO.sumRental(map);
 	}
-	
+	 
+	@Transactional
 	public void insertRental(Map<String, Object> map)  throws Exception {
 		orderDAO.insertRental(map);
 		

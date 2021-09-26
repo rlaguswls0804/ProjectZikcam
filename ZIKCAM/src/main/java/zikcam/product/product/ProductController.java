@@ -424,7 +424,6 @@ public class ProductController {
 		return mv;
 	}
 	
-	
 	@RequestMapping(value="/deleteWish2", method = RequestMethod.GET)
 	public ModelAndView deleteWish2(CommandMap commandMap, HttpServletRequest request) throws Exception{
 		ModelAndView mv = new ModelAndView("redirect:/prod/productDetail2");

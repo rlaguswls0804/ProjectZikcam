@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<!-- Transaction Setting -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+ 		<property name="dataSource" ref="dataSource"/>
+ 	</bean>
+ 	 	 
+ 	 <!-- auto Setting -->	 
+ 	<tx:annotation-driven/>
+ 	<!-- Transaction AOP -->
+ 	<!-- <aop:config proxy-target-class="true">
+		<aop:pointcut id="servicePublicMethod" expression="execution(public * com.freehoon.web.board..*(int))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="servicePublicMethod" />
+	</aop:config> -->
+	
+	<!-- declarative Transaction  -->
+	<!-- <tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="getBoardContent" rollback-for="Exception" />
+		</tx:attributes>    
+ 	</tx:advice> 	 -->
+
+</beans>
