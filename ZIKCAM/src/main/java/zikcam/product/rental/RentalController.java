@@ -140,20 +140,20 @@ public class RentalController {
 	
 	@RequestMapping(value="/rentalDetail", method = RequestMethod.GET) 
 	public ModelAndView productDetail(CommandMap commandMap, HttpServletRequest request) throws Exception { 
-		ModelAndView mv = new ModelAndView("/rentalDetail");
+		ModelAndView mv = new ModelAndView("redirect:/prod/rentalDetail2");
 		 
 		HttpSession session = request.getSession();
 		commandMap.put("MEMBER_ID", session.getAttribute("session_MEM_ID"));
 		
 		Map<String,Object> map = rentalService.selectRentalDetail(commandMap.getMap());
 		
+		mv.addObject("PROD_NUM", commandMap.get("PROD_NUM"));
 		mv.addObject("map", map.get("map"));
 		
 		System.out.println(commandMap.getMap());
 		System.out.println(map.get("map"));
 		
 		return mv;
-	
 	} 
 	
 	
