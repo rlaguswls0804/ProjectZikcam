@@ -83,7 +83,7 @@ public class ProductController {
 	// 구매상품 상세보기
 	@RequestMapping(value="/productDetail", method = RequestMethod.GET)
 	public ModelAndView productDetail(CommandMap commandMap, HttpServletRequest request) throws Exception {
-		ModelAndView mv = new ModelAndView("/productDetail");
+		ModelAndView mv = new ModelAndView("redirect:/prod/productDetail2");
 		
 		System.out.println("prod detail : " + commandMap.getMap());
 		
@@ -96,7 +96,6 @@ public class ProductController {
 		mv.addObject("PROD_NUM", commandMap.get("PROD_NUM"));
 		mv.addObject("map", map.get("map"));
 
-		
 		/*
 		 * Map<String, Object> list = productService.selectProductInform(test);
 		 * List<Map<String, Object>> list2 = productService.selectProductReview(test);
