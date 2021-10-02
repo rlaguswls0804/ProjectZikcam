@@ -261,13 +261,13 @@
 	
 	function fn_openLogin(){
 		var comSubmit = new ComSubmit();
-		comSubmit.setUrl("<c:url value='../member/loginForm' />");
+		comSubmit.setUrl("/zikcam/member/loginForm");
 		comSubmit.submit();
 	}
 	
 	function fn_ProductList(){
 		var comSubmit = new ComSubmit();
-		comSubmit.setUrl("<c:url value='../prod/purchaseTent' />");
+		comSubmit.setUrl("/zikcam/prod/purchaseTent");
 		comSubmit.addParam("keyword", $('#keyword').val());
 		comSubmit.submit();
 	}
