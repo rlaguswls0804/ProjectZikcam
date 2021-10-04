@@ -1,7 +1,7 @@
 ProjectZikcam
  - 2021.07 ~ 2021.09 진행<br>
  - 개발 인원 : 6<br>
- - 사이트 주소 : http://zikcam.duckdns.org:9000/zikcam/prod/main<br>
+ - 사이트 주소 : http://zikcam.duckdns.org:9000/zikcam/<br>
 
 개발 배경<br>
  - 캠핑상품 판매 사이트는 많은데, 반면 캠핑상품 대여 사이트는 많지 않습니다.<br>
