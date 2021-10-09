@@ -15,10 +15,7 @@
 				<section class="py-5">
 					<div class="container px-4 px-lg-5 mt-5">
 						<h3>Q&A</h3>
-						<!-- <ol class="breadcrumb mb-4">
-							<li class="breadcrumb-item"><a href="index.html">구매</a></li>
-							<li class="breadcrumb-item active">대여</li>
-						</ol> -->
+						
 						<font color="gray">상품문의는 구매내역에서 작성하실 수 있습니다.</font>
 						<hr />
 						<table class="table">
