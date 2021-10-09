@@ -67,12 +67,17 @@
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:#4b4b4b">쇼핑하기</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                  <li><h5 class="dropdown-header">대여</h5></li>
+                                 <c:if test="${session_MEM_ID != null }">    
                                 <c:if test="${start_date == null }">
 	                                <li><a class="dropdown-item" href="/zikcam/prod/rentalDate">대여하기</a></li>
                                 </c:if>
                                 <c:if test="${start_date != null }">
 	                                <li><a class="dropdown-item" href="/zikcam/prod/rentalList">대여하기</a></li>
                                 </c:if>
+	                            </c:if>
+	                            <c:if test="${session_MEM_ID == null }">    
+	                                <li><a class="dropdown-item" href="/zikcam/prod/rentalDate" id="rentalDrop">대여하기</a></li>
+	                            </c:if>
                                 <li><hr class="dropdown-divider" /></li>
                                 <li><h5 class="dropdown-header">구매</h5></li>
                                 <li><a class="dropdown-item" href="/zikcam/prod/purchaseTent">텐트 / 타프</a></li>
@@ -113,16 +118,28 @@
         </nav>
 <%@ include file="/WEB-INF/include/include-body.jspf" %>
 <script type="text/javascript">
-	/* $(document).ready(function(){
-		$("#purchase2").on("click", function(e){ //렌탈 날짜선택 페이지
+	$(document).ready(function(){
+		/* $("#purchase2").on("click", function(e){ //렌탈 날짜선택 페이지
 			e.preventDefault();
 			if("${start_date || end_date}"){
 				fn_openRentalList();
 			}else {
 				fn_openProduct();
 			}
-		}); 
-	}); */
+		});  */
+		
+		$("#rentalDrop").on("click", function(e){ //렌탈 날짜선택 페이지
+			e.preventDefault();
+			fn_validation();
+		});
+		
+	});
+	
+	function fn_openLogin(){
+		var comSubmit = new ComSubmit();
+		comSubmit.setUrl("<c:url value='../member/loginForm' />");
+		comSubmit.submit();
+	}
 	
 	function fn_deleteSession(){
 		var comSubmit = new ComSubmit();
@@ -141,6 +158,14 @@
 		comSubmit.setUrl("<c:url value='/prod/purchaseTent' />");
 		comSubmit.submit(); 
 	}
+	
+	function fn_validation() { 	   
+		   if("${session_MEM_ID == null}"){
+		      alert("대여하기는 로그인 후 이용 가능합니다");
+		      return fn_openLogin();
+		   }
+	}
+	
 </script>
 </body>
 </html>
