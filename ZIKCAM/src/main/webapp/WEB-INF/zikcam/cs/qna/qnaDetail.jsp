@@ -92,7 +92,7 @@
 					
 						<!-- *회원 전용 -->
 						<%-- <c:if test="${member.MEMBER_RANK == 1}"> --%>
-						<c:if test="${session_MEM_ID eq boardMap.MEMBER_ID && session_MEM_ID ne null && session_MEM_RANK == 0}">
+						<c:if test="${session_MEM_ID eq boardMap.MEMBER_ID && session_MEM_ID ne null}">
 							<a href="$this" id="delete" style="float: right;">
 								<button class="btn btn-outline-dgray" 
 				            		style="outline: 1; border: 1; font-size: 0.7em; width: 80px; height: 30px;">문의삭제
